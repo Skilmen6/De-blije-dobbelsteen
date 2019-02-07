@@ -1,0 +1,14 @@
+body {
+    background: darkgrey;
+    align-items: center;
+    justify-cocntent: enter;
+    background: url(img/gras.jpg);
+}
+canvas {
+    margin-left: 37%;
+    margin-top: 10%;
+    img-align="middle";
+    border: 10px solid saddlebrown;
+    background: url(img/gras2.jpg);
+
+}
