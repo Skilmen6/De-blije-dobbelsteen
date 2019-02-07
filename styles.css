@@ -27,11 +27,3 @@ nav ul li {
 	float: left;
 	border: 2px solid black;
 }
-
-footer {
-	text-align: center;
-	border: 2px solid black;
-	margin-top: 580px;
-	background-color: #0075BA;
-	padding-bottom: 28px;
-}
