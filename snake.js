@@ -1,6 +1,6 @@
 var canvas = document.getElementById('game');
 var context = canvas.getContext('2d');
-var grid = 16;
+var grid = 16
 var count = 0;
 
 var snake = {
@@ -13,7 +13,7 @@ var snake = {
     cells: [],
 
     // lengte van de slang bij het eten van appels
-    maxCells: 4
+    maxCells: 5
 };
 var apple = {
     x: 320,
@@ -54,6 +54,8 @@ function loop() {
     }
     // de appel
     context.fillStyle = 'red';
+    //let img = document.getElementById('aplimg');
+    //context.drawImage(img,0,0)
     context.fillRect(apple.x, apple.y, grid-1, grid-1);
     var fruit = document.createElement("img");
     fruit.setAttribute("src", "img/food.png");
@@ -111,3 +113,7 @@ document.addEventListener('keydown', function(e) {
 });
 // start
 requestAnimationFrame(loop);
+
+var game = "play"; //This is the game variable
+
+
