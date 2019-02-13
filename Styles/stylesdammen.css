@@ -1,0 +1,40 @@
+#game-container{
+  height: 100vh;
+}
+
+div > div > div{
+  border: 1px solid black;
+  width: 70px;
+  height: 70px;
+}
+
+div > div:nth-child(odd) > *:nth-child(odd){
+  background-color: beige;
+}
+
+div > div:nth-child(even) > *:nth-child(even){
+  background-color: beige;
+}
+
+div > div:nth-child(even) > *:nth-child(odd){
+  background-color: #692e00;
+}
+
+div > div:nth-child(odd) > *:nth-child(even){
+  background-color: #692e00;
+}
+
+.flex-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#row-container{
+  flex-direction: column;
+}
+
+.number{
+  color: white;
+  background-color: #692e00;
+}
