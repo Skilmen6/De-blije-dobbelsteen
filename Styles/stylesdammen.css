@@ -8,11 +8,11 @@ div > div > div{
   height: 70px;
 }
 
-div > div:nth-child(odd) > *:nth-child(odd){
+div > div:nth-child(odd){
   background-color: beige;
 }
 
-div > div:nth-child(even) > *:nth-child(even){
+div > div:nth-child(even){
   background-color: beige;
 }
 
@@ -37,4 +37,7 @@ div > div:nth-child(odd) > *:nth-child(even){
 .number{
   color: white;
   background-color: #692e00;
+  position: relative;
+    right: 25px;
+    top: 25px;
 }
