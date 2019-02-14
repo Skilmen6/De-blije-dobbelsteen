@@ -8,7 +8,7 @@ body {
 canvas {
     margin-left: 37%;
     margin-top: 2%;
-    img-align="middle";
+    img-align: "middle";
     border: 10px solid saddlebrown;
     background: url(img/gras2.jpg);
 
