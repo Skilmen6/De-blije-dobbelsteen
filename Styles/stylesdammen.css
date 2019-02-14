@@ -37,7 +37,7 @@ div > div:nth-child(odd) > *:nth-child(even){
 .number{
   color: white;
   background-color: #692e00;
+  float: left;
   position: relative;
-    right: 25px;
     top: 25px;
 }
