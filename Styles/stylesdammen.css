@@ -28,10 +28,14 @@ div > div:nth-child(odd) > *:nth-child(even){
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: row;
+  transform: rotate(90deg);
 }
 
-#row-container{
-  flex-direction: column;
+.spelvak{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .number{
