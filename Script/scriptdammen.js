@@ -10,7 +10,9 @@ var board = [
   ["c", "W", "c", "W", "c", "W", "c", "W", "c", "W"],
   ["W", "c", "W", "c", "W", "c", "W", "c", "W", "c"]
 ]
-
+var Wstones = 20;
+var Bstones = 20;
+var player = "W";
 createBoard();
 
 function createBoard(){
@@ -103,59 +105,37 @@ function clearChildren(p){
   }
 }
 
-from = false;
+var from = false;
+var fromR = 1;
+var fromI = 1;
 
 function movePiece(elem){
-  console.log(elem);
-  var container = document.getElementById("game-container");
-  if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png"){
+  var jumpr = parseInt(checkJump()[0]);
+  var jumpi = parseInt(checkJump()[1]);
+
+  console.log(jumpr);
+  console.log(jumpi);
+
+  if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && player == "W"){
+    from = elem;
+    console.log(player);
+    if (checkJump()){
+      var posfrom = from.id.split(".");
+      fromR = parseInt(posfrom[0]);
+      fromI = parseInt(posfrom[1]);
+    }
+  }
+
+  else if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && isLegalMoveW(from, elem) && player == "W"){
+    movePieceW(from, elem);
+  }
+
+  if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && player == "Z"){
+    console.log(player);
     from = elem;
   }
-  else if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && isLegalMoveW(from, elem)){
-    var posfrom = from.id.split(".");
-    var posto = elem.id.split(".");
-
-    var fromR = parseInt(posfrom[0]);
-    var fromI = parseInt(posfrom[1]);
-
-    var toR = parseInt(posto[0]);
-    var toI = parseInt(posto[1]);
-
-    console.log(toR);
-    console.log(board[toR][toI]);
-
-    board[toR].splice(toI, 1, "W");
-    board[fromR].splice(fromI, 1, "b");
-
-
-    from = false;
-    clearChildren(container);
-    createBoard();
-  }
-
-  if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png"){
-    from = elem;
-  }
-  else if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && isLegalMoveZ(from, elem)){
-    var posfrom = from.id.split(".");
-    var posto = elem.id.split(".");
-
-    var fromR = parseInt(posfrom[0]);
-    var fromI = parseInt(posfrom[1]);
-
-    var toR = parseInt(posto[0]);
-    var toI = parseInt(posto[1]);
-
-    console.log(toR);
-    console.log(board[toR][toI]);
-
-    board[toR].splice(toI, 1, "Z");
-    board[fromR].splice(fromI, 1, "b");
-
-
-    from = false;
-    clearChildren(container);
-    createBoard();
+  else if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && isLegalMoveZ(from, elem) && player == "Z"){
+    movePieceZ(from, elem);
   }
 }
 
@@ -168,11 +148,6 @@ function isLegalMoveW(from, elem){
 
   var toR = parseInt(posto[0]);
   var toI = parseInt(posto[1]);
-
-  console.log(fromR);
-  console.log(fromI);
-  console.log(toR);
-  console.log(toI);
 
   if (toR == fromR - 1 && toI == fromI -1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" || toI == fromI +1 && toR == fromR - 1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png"){
     return true;
@@ -192,15 +167,104 @@ function isLegalMoveZ(from, elem){
   var toR = parseInt(posto[0]);
   var toI = parseInt(posto[1]);
 
-  console.log(fromR);
-  console.log(fromI);
-  console.log(toR);
-  console.log(toI);
-
   if (toR == fromR + 1 && toI == fromI -1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" || toI == fromI +1 && toR == fromR + 1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png"){
     return true;
   }
   else{
     return false;
+  }
+}
+
+function movePieceW(from, elem){
+  var container = document.getElementById("game-container");
+  var posfrom = from.id.split(".");
+  var posto = elem.id.split(".");
+
+  var fromR = parseInt(posfrom[0]);
+  var fromI = parseInt(posfrom[1]);
+
+  var toR = parseInt(posto[0]);
+  var toI = parseInt(posto[1]);
+
+  board[toR].splice(toI, 1, "W");
+  board[fromR].splice(fromI, 1, "b");
+
+  player = "Z";
+  from = false;
+  clearChildren(container);
+  createBoard();
+}
+
+function movePieceZ(from, elem){
+  var container = document.getElementById("game-container");
+  var posfrom = from.id.split(".");
+  var posto = elem.id.split(".");
+
+  var fromR = parseInt(posfrom[0]);
+  var fromI = parseInt(posfrom[1]);
+
+  var toR = parseInt(posto[0]);
+  var toI = parseInt(posto[1]);
+
+  board[toR].splice(toI, 1, "Z");
+  board[fromR].splice(fromI, 1, "b");
+
+  player = "W";
+  from = false;
+  clearChildren(container);
+  createBoard();
+}
+
+function checkJump(){
+
+  for (r=0; r < board.length; r++){
+
+    for (i=0; i < board[r].length; i++){
+
+      if (board[r][i] == "W"){
+
+        if (board[r -1][i -1] == "Z" && board[r -2][i -2] == "b"){
+          var rs = r.toString();
+          var is = i.toString();
+
+          var rsis = rs + "." + is;
+          var rsisarr = rsis.split(".");
+
+          return rsisarr;
+        }
+        else if (board[r -1][i +1] == "Z" && board[r -2][i +2] == "b"){
+          console.log("kek1");
+          }
+        else if (board[r +1] && board[r +1][i -1] == "Z" && board[r +2][i -2] == "b"){
+          console.log("kek2");
+          }
+        else if (board[r +1] && board[r +1][i +1] == "Z" && board[r +2][i +2] == "b"){
+          console.log("kek3");
+          }
+      }
+      else if (board[r][i] == "Z"){
+
+      }
+    }
+  }
+  return false;
+}
+
+function jumpPieceW(from, elem){
+  var posfrom = from.id.split(".");
+  var posto = elem.id.split(".");
+
+  var fromR = parseInt(posfrom[0]);
+  var fromI = parseInt(posfrom[1]);
+
+  var toR = parseInt(posto[0]);
+  var toI = parseInt(posto[1]);
+
+  if(toR == fromR -2 && toI == fromI -2){
+    board[fromR -1].splice(fromI -1, 1, "b");
+    movePieceW(from, elem);
+  }
+  else{
+    alert("U moet slaan.");
   }
 }
