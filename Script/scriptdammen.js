@@ -110,19 +110,28 @@ var fromR = 1;
 var fromI = 1;
 
 function movePiece(elem){
-  var jumpr = parseInt(checkJump()[0]);
-  var jumpi = parseInt(checkJump()[1]);
+  var jumpR = parseInt(checkJump()[0]);
+  var jumpI = parseInt(checkJump()[1]);
 
-  console.log(jumpr);
-  console.log(jumpi);
+  console.log(jumpR);
+  console.log(jumpI);
 
   if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && player == "W"){
     from = elem;
     console.log(player);
+
     if (checkJump()){
       var posfrom = from.id.split(".");
       fromR = parseInt(posfrom[0]);
       fromI = parseInt(posfrom[1]);
+
+      if (jumpR == fromR && jumpI == fromI){
+        jumpPieceW(from, elem);
+      }
+      else{
+        alert("U moet slaan");
+        from = false;
+      }
     }
   }
 
@@ -229,6 +238,7 @@ function checkJump(){
 
           var rsis = rs + "." + is;
           var rsisarr = rsis.split(".");
+          rsisarr[2] = "--";
 
           return rsisarr;
         }
