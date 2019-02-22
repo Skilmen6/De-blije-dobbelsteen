@@ -13,6 +13,8 @@ var board = [
 var Wstones = 20;
 var Bstones = 20;
 var player = "W";
+var jumpZ = false;
+var jumpW = false;
 createBoard();
 
 function createBoard(){
@@ -109,6 +111,7 @@ var from = false;
 var fromR = 1;
 var fromI = 1;
 
+
 function movePiece(elem){
   var jumpR = parseInt(checkJump()[0]);
   var jumpI = parseInt(checkJump()[1]);
@@ -122,8 +125,7 @@ function movePiece(elem){
       var posfrom = from.id.split(".");
       fromR = parseInt(posfrom[0]);
       fromI = parseInt(posfrom[1]);
-      console.log(jumpR);
-      console.log(fromR);
+
       if (jumpR == fromR && jumpI == fromI){
         jumpPieceW(from, elem);
       }
@@ -151,8 +153,7 @@ function movePiece(elem){
       var posfrom = from.id.split(".");
       fromR = parseInt(posfrom[0]);
       fromI = parseInt(posfrom[1]);
-      console.log(jumpR);
-      console.log(fromR);
+
       if (jumpR == fromR && jumpI == fromI){
         jumpPieceZ(from, elem);
       }
@@ -221,8 +222,15 @@ function movePieceW(from, elem){
 
   board[toR].splice(toI, 1, "W");
   board[fromR].splice(fromI, 1, "b");
-
-  player = "Z";
+  console.log(jumpW);
+  if (checkJump() && jumpW == true){
+    player == "W";
+    console.log(player);
+  }
+  else{
+    player = "Z";
+    jumpW = false;
+  }
   from = false;
   clearChildren(container);
   createBoard();
@@ -241,8 +249,15 @@ function movePieceZ(from, elem){
 
   board[toR].splice(toI, 1, "Z");
   board[fromR].splice(fromI, 1, "b");
-
-  player = "W";
+  console.log(jumpZ);
+  if (checkJump() && jumpZ == true){
+    player == "Z";
+    console.log(player);
+  }
+  else{
+    jumpZ = false;
+    player = "W";
+  }
   from = false;
   clearChildren(container);
   createBoard();
@@ -256,7 +271,7 @@ function checkJump(){
 
       if (board[r][i] == "W" && player == "W"){
 
-        if (board[r -1][i -1] == "Z" && board[r -2][i -2] == "b"){
+        if (board[r -1] && board[r -2] && board[r -1][i -1] == "Z" && board[r -2][i -2] == "b"){
           var rs = r.toString();
           var is = i.toString();
 
@@ -266,7 +281,7 @@ function checkJump(){
 
           return rsisarr;
         }
-        else if (board[r -1][i +1] == "Z" && board[r -2][i +2] == "b"){
+        else if (board[r -1] && board[r -2] && board[r -1][i +1] == "Z" && board[r -2][i +2] == "b"){
           var rs = r.toString();
           var is = i.toString();
 
@@ -276,7 +291,7 @@ function checkJump(){
 
           return rsisarr;
           }
-        else if (board[r +1] && board[r +1][i -1] == "Z" && board[r +2][i -2] == "b"){
+        else if (board[r +1] && board[r +2] && board[r +1][i -1] == "Z" && board[r +2][i -2] == "b"){
           var rs = r.toString();
           var is = i.toString();
 
@@ -286,7 +301,7 @@ function checkJump(){
 
           return rsisarr;
           }
-        else if (board[r +1] && board[r +1][i +1] == "Z" && board[r +2][i +2] == "b"){
+        else if (board[r +1] && board[r +2] && board[r +1][i +1] == "Z" && board[r +2][i +2] == "b"){
           var rs = r.toString();
           var is = i.toString();
 
@@ -299,7 +314,7 @@ function checkJump(){
         }
       else if (board[r][i] == "Z" && player == "Z"){
 
-        if ( board[r -1] && board[r -1][i -1] == "W" && board[r -2][i -2] == "b"){
+        if ( board[r -1] && board[r -2] && board[r -1][i -1] == "W" && board[r -2][i -2] == "b"){
           var rs = r.toString();
           var is = i.toString();
 
@@ -309,7 +324,7 @@ function checkJump(){
 
           return rsisarr;
         }
-        else if (board[r -1] && board[r -1][i +1] == "W" && board[r -2][i +2] == "b"){
+        else if (board[r -1] && board[r -2] && board[r -1][i +1] == "W" && board[r -2][i +2] == "b"){
           var rs = r.toString();
           var is = i.toString();
 
@@ -319,7 +334,7 @@ function checkJump(){
 
           return rsisarr;
           }
-        else if (board[r +1] && board[r +1][i -1] == "W" && board[r +2][i -2] == "b"){
+        else if (board[r +1] && board[r +2] && board[r +1][i -1] == "W" && board[r +2][i -2] == "b"){
           var rs = r.toString();
           var is = i.toString();
 
@@ -329,7 +344,7 @@ function checkJump(){
 
           return rsisarr;
           }
-        else if (board[r +1] && board[r +1][i +1] == "W" && board[r +2][i +2] == "b"){
+        else if (board[r +1] && board[r +2] && board[r +1][i +1] == "W" && board[r +2][i +2] == "b"){
           var rs = r.toString();
           var is = i.toString();
 
@@ -360,6 +375,7 @@ function jumpPieceW(from, elem){
     case "--":
       if(toR == fromR -2 && toI == fromI -2){
         board[fromR -1].splice(fromI -1, 1, "b");
+        jumpW = true;
         movePieceW(from, elem);
       }
       else if (isLegalMoveW(from, elem)){
@@ -369,8 +385,8 @@ function jumpPieceW(from, elem){
       break;
     case "-+":
       if(toR == fromR -2 && toI == fromI +2){
-        console.log(checkJump()[2]);
         board[fromR -1].splice(fromI +1, 1, "b");
+        jumpW = true;
         movePieceW(from, elem);
       }
       else if (isLegalMoveW(from, elem)){
@@ -380,8 +396,8 @@ function jumpPieceW(from, elem){
       break;
     case "+-":
       if(toR == fromR +2 && toI == fromI -2){
-        console.log(checkJump()[2]);
         board[fromR +1].splice(fromI -1, 1, "b");
+        jumpW = true;
         movePieceW(from, elem);
       }
     else if (isLegalMoveW(from, elem)){
@@ -391,8 +407,8 @@ function jumpPieceW(from, elem){
     break;
     case "++":
       if(toR == fromR +2 && toI == fromI +2){
-        console.log(checkJump()[2]);
         board[fromR +1].splice(fromI +1, 1, "b");
+        jumpW = true;
         movePieceW(from, elem);
       }
     else if (isLegalMoveW(from, elem)){
@@ -419,6 +435,7 @@ function jumpPieceZ(from, elem){
     case "--":
       if(toR == fromR -2 && toI == fromI -2){
         board[fromR -1].splice(fromI -1, 1, "b");
+        jumpZ = true;
         movePieceZ(from, elem);
       }
       else if (isLegalMoveZ(from, elem)){
@@ -428,8 +445,8 @@ function jumpPieceZ(from, elem){
       break;
     case "-+":
       if(toR == fromR -2 && toI == fromI +2){
-        console.log(checkJump()[2]);
         board[fromR -1].splice(fromI +1, 1, "b");
+        jumpZ = true;
         movePieceZ(from, elem);
       }
       else if (isLegalMoveZ(from, elem)){
@@ -439,8 +456,8 @@ function jumpPieceZ(from, elem){
       break;
     case "+-":
       if(toR == fromR +2 && toI == fromI -2){
-        console.log(checkJump()[2]);
         board[fromR +1].splice(fromI -1, 1, "b");
+        jumpZ = true;
         movePieceZ(from, elem);
       }
     else if (isLegalMoveZ(from, elem)){
@@ -450,8 +467,8 @@ function jumpPieceZ(from, elem){
     break;
     case "++":
       if(toR == fromR +2 && toI == fromI +2){
-        console.log(checkJump()[2]);
         board[fromR +1].splice(fromI +1, 1, "b");
+        jumpZ = true;
         movePieceZ(from, elem);
       }
     else if (isLegalMoveZ(from, elem)){
