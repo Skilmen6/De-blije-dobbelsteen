@@ -113,18 +113,17 @@ function movePiece(elem){
   var jumpR = parseInt(checkJump()[0]);
   var jumpI = parseInt(checkJump()[1]);
 
-  console.log(jumpR);
-  console.log(jumpI);
-
   if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && player == "W"){
     from = elem;
     console.log(player);
-
+  }
+  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && player == "W"){
     if (checkJump()){
       var posfrom = from.id.split(".");
       fromR = parseInt(posfrom[0]);
       fromI = parseInt(posfrom[1]);
-
+      console.log(jumpR);
+      console.log(fromR);
       if (jumpR == fromR && jumpI == fromI){
         jumpPieceW(from, elem);
       }
@@ -134,17 +133,42 @@ function movePiece(elem){
       }
     }
   }
-
-  else if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && isLegalMoveW(from, elem) && player == "W"){
-    movePieceW(from, elem);
+  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && isLegalMoveW(from, elem) && player == "W"){
+    if (jumpPieceW(from, elem)){
+      movePieceW(from, elem);
+    }
+    else{
+      alert("u moet slaan");
+    }
   }
 
   if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && player == "Z"){
     console.log(player);
     from = elem;
   }
-  else if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && isLegalMoveZ(from, elem) && player == "Z"){
-    movePieceZ(from, elem);
+  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && player == "Z"){
+    if (checkJump()){
+      var posfrom = from.id.split(".");
+      fromR = parseInt(posfrom[0]);
+      fromI = parseInt(posfrom[1]);
+      console.log(jumpR);
+      console.log(fromR);
+      if (jumpR == fromR && jumpI == fromI){
+        jumpPieceZ(from, elem);
+      }
+      else{
+        alert("U moet slaan");
+        from = false;
+      }
+    }
+  }
+  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && isLegalMoveZ(from, elem) && player == "Z"){
+    if (jumpPieceZ(from, elem)){
+      movePieceZ(from, elem);
+    }
+    else{
+      alert("u moet slaan");
+    }
   }
 }
 
@@ -230,7 +254,7 @@ function checkJump(){
 
     for (i=0; i < board[r].length; i++){
 
-      if (board[r][i] == "W"){
+      if (board[r][i] == "W" && player == "W"){
 
         if (board[r -1][i -1] == "Z" && board[r -2][i -2] == "b"){
           var rs = r.toString();
@@ -243,17 +267,78 @@ function checkJump(){
           return rsisarr;
         }
         else if (board[r -1][i +1] == "Z" && board[r -2][i +2] == "b"){
-          console.log("kek1");
+          var rs = r.toString();
+          var is = i.toString();
+
+          var rsis = rs + "." + is;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "-+";
+
+          return rsisarr;
           }
         else if (board[r +1] && board[r +1][i -1] == "Z" && board[r +2][i -2] == "b"){
-          console.log("kek2");
+          var rs = r.toString();
+          var is = i.toString();
+
+          var rsis = rs + "." + is;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "+-";
+
+          return rsisarr;
           }
         else if (board[r +1] && board[r +1][i +1] == "Z" && board[r +2][i +2] == "b"){
-          console.log("kek3");
-          }
-      }
-      else if (board[r][i] == "Z"){
+          var rs = r.toString();
+          var is = i.toString();
 
+          var rsis = rs + "." + is;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "++";
+
+          return rsisarr;
+          }
+        }
+      else if (board[r][i] == "Z" && player == "Z"){
+
+        if ( board[r -1] && board[r -1][i -1] == "W" && board[r -2][i -2] == "b"){
+          var rs = r.toString();
+          var is = i.toString();
+
+          var rsis = rs + "." + is;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "--";
+
+          return rsisarr;
+        }
+        else if (board[r -1] && board[r -1][i +1] == "W" && board[r -2][i +2] == "b"){
+          var rs = r.toString();
+          var is = i.toString();
+
+          var rsis = rs + "." + is;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "-+";
+
+          return rsisarr;
+          }
+        else if (board[r +1] && board[r +1][i -1] == "W" && board[r +2][i -2] == "b"){
+          var rs = r.toString();
+          var is = i.toString();
+
+          var rsis = rs + "." + is;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "+-";
+
+          return rsisarr;
+          }
+        else if (board[r +1] && board[r +1][i +1] == "W" && board[r +2][i +2] == "b"){
+          var rs = r.toString();
+          var is = i.toString();
+
+          var rsis = rs + "." + is;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "++";
+
+          return rsisarr;
+          }
       }
     }
   }
@@ -270,11 +355,110 @@ function jumpPieceW(from, elem){
   var toR = parseInt(posto[0]);
   var toI = parseInt(posto[1]);
 
-  if(toR == fromR -2 && toI == fromI -2){
-    board[fromR -1].splice(fromI -1, 1, "b");
-    movePieceW(from, elem);
+
+  switch (checkJump()[2]) {
+    case "--":
+      if(toR == fromR -2 && toI == fromI -2){
+        board[fromR -1].splice(fromI -1, 1, "b");
+        movePieceW(from, elem);
+      }
+      else if (isLegalMoveW(from, elem)){
+        from = false;
+        return false;
+      }
+      break;
+    case "-+":
+      if(toR == fromR -2 && toI == fromI +2){
+        console.log(checkJump()[2]);
+        board[fromR -1].splice(fromI +1, 1, "b");
+        movePieceW(from, elem);
+      }
+      else if (isLegalMoveW(from, elem)){
+        from = false;
+        return false;
+      }
+      break;
+    case "+-":
+      if(toR == fromR +2 && toI == fromI -2){
+        console.log(checkJump()[2]);
+        board[fromR +1].splice(fromI -1, 1, "b");
+        movePieceW(from, elem);
+      }
+    else if (isLegalMoveW(from, elem)){
+      from = false;
+      return false;
+      }
+    break;
+    case "++":
+      if(toR == fromR +2 && toI == fromI +2){
+        console.log(checkJump()[2]);
+        board[fromR +1].splice(fromI +1, 1, "b");
+        movePieceW(from, elem);
+      }
+    else if (isLegalMoveW(from, elem)){
+      from = false;
+      return false;
+      }
+    break;
   }
-  else{
-    alert("U moet slaan.");
+  return true;
+}
+
+function jumpPieceZ(from, elem){
+  var posfrom = from.id.split(".");
+  var posto = elem.id.split(".");
+
+  var fromR = parseInt(posfrom[0]);
+  var fromI = parseInt(posfrom[1]);
+
+  var toR = parseInt(posto[0]);
+  var toI = parseInt(posto[1]);
+
+
+  switch (checkJump()[2]) {
+    case "--":
+      if(toR == fromR -2 && toI == fromI -2){
+        board[fromR -1].splice(fromI -1, 1, "b");
+        movePieceZ(from, elem);
+      }
+      else if (isLegalMoveZ(from, elem)){
+        from = false;
+        return false;
+      }
+      break;
+    case "-+":
+      if(toR == fromR -2 && toI == fromI +2){
+        console.log(checkJump()[2]);
+        board[fromR -1].splice(fromI +1, 1, "b");
+        movePieceZ(from, elem);
+      }
+      else if (isLegalMoveZ(from, elem)){
+        from = false;
+        return false;
+      }
+      break;
+    case "+-":
+      if(toR == fromR +2 && toI == fromI -2){
+        console.log(checkJump()[2]);
+        board[fromR +1].splice(fromI -1, 1, "b");
+        movePieceZ(from, elem);
+      }
+    else if (isLegalMoveZ(from, elem)){
+      from = false;
+      return false;
+      }
+    break;
+    case "++":
+      if(toR == fromR +2 && toI == fromI +2){
+        console.log(checkJump()[2]);
+        board[fromR +1].splice(fromI +1, 1, "b");
+        movePieceZ(from, elem);
+      }
+    else if (isLegalMoveZ(from, elem)){
+      from = false;
+      return false;
+      }
+    break;
   }
+  return true;
 }
