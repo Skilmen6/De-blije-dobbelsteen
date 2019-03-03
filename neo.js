@@ -1,21 +1,19 @@
 var canvas = document.getElementById('game');
 var context = canvas.getContext('2d');
-var grid = 16;
+var grid = 16
 var count = 0;
-var score = 0;
+
 var snake = {
     x: 160,
     y: 160,
 
-    //snake snelheid. Elke grid lengte in x en y kant
+    // snelheid van de slang
     dx: grid,
     dy: 0,
-
-    //kijkt bij fouten van snake
     cells: [],
 
-    // lengte van de slang na het eten van een appel
-    maxCells: 4
+    // lengte van de slang bij het eten van appels
+    maxCells: 5
 };
 var apple = {
     x: 320,
@@ -24,21 +22,18 @@ var apple = {
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
-// game loop
+// snelheid van de slang
 function loop() {
-
     requestAnimationFrame(loop);
-    // Snelheid van de slang
     if (++count < 6) {
         return;
     }
-
     count = 0;
     context.clearRect(0,0,canvas.width,canvas.height);
-    // snelheid van de slang velocity
+    // velocity van de slang
     snake.x += snake.dx;
     snake.y += snake.dy;
-    // horzontally position van hoek van scherm
+    // horizontall einde van het scherm
     if (snake.x < 0) {
         snake.x = canvas.width - grid;
     }
@@ -46,41 +41,39 @@ function loop() {
         snake.x = 0;
     }
 
-    // Verticaal position van hoek van scherm
+    // verticaal einde van het scherm
     if (snake.y < 0) {
         snake.y = canvas.height - grid;
     }
     else if (snake.y >= canvas.height) {
         snake.y = 0;
     }
-    //zien waar de slang is geweest
     snake.cells.unshift({x: snake.x, y: snake.y});
     if (snake.cells.length > snake.maxCells) {
         snake.cells.pop();
     }
-    // teken de appel
-    context.fillStyle = 'red';
+    // de appel
+    var myImage = new Image();
+    myImage.src = "img/food.png";
     context.fillRect(apple.x, apple.y, grid-1, grid-1);
-    // tekent de slang 1 cell per keer
+    var myImage = document.createElement("img");
+    //fruit.setAttribute("src", "img/food.png");
+    document.body.appendChild(myImage);
+    // de slang die per aantal pixels beweegt
     context.fillStyle = 'lime';
     snake.cells.forEach(function(cell, index) {
 
-
-        // tekent de 1px grid waardoor je kan zien hoelang de grid is.
         context.fillRect(cell.x, cell.y, grid-1, grid-1);
-        // slang die de appel eet
+        // slang eet appel
         if (cell.x === apple.x && cell.y === apple.y) {
             snake.maxCells++;
-            score++;
-            // canvas is 400x400 elke grid is 25x25.
+            // canvas is 400x400 dat is 25x25 grids dat is ook even groot als een appel
             apple.x = getRandomInt(0, 25) * grid;
             apple.y = getRandomInt(0, 25) * grid;
         }
-
-        // kijkt of de cells niet door elkaar heen gaan.
         for (var i = index + 1; i < snake.cells.length; i++) {
 
-            // als de slang zich zelf raakt dan begin je opnieuw.
+            // als de slang zich zelf raakt restart het spel
             if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
                 snake.x = 160;
                 snake.y = 160;
@@ -94,32 +87,32 @@ function loop() {
         }
     });
 }
-// zorgt ervoor dat de slang luistert op de toetsen
+// zorgt ervoor dat de slang op  toetsenbord reageert
 document.addEventListener('keydown', function(e) {
-
-    // naar links
+    // links
     if (e.which === 37 && snake.dx === 0) {
         snake.dx = -grid;
         snake.dy = 0;
     }
-    // naar boven
+    // boven
     else if (e.which === 38 && snake.dy === 0) {
         snake.dy = -grid;
         snake.dx = 0;
     }
-    // naar rechts
+    // rechts
     else if (e.which === 39 && snake.dx === 0) {
         snake.dx = grid;
         snake.dy = 0;
     }
-    // naar beneden
+    // beneden
     else if (e.which === 40 && snake.dy === 0) {
         snake.dy = grid;
         snake.dx = 0;
     }
-    ctx.fillStyle = "#000";
-    ctx.fillText("SCORE: " + score, 10, canvas.height-10);
 });
-
-//start de game.
+// start
 requestAnimationFrame(loop);
+
+var game = "play"; //This is the game variable
+
+
