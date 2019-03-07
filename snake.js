@@ -88,6 +88,8 @@ function setFood() {
 /**
  * Starts the game
  */
+var background = new Image();
+
 function main() {
 
     canvas = document.createElement("canvas");
@@ -106,8 +108,15 @@ function main() {
         delete keystate[evt.keyCode];
     });
 
-    init();
-    loop();
+
+    background.src = "img/gras2.jpg";
+
+// Make sure the image is loaded first otherwise nothing will draw.
+    background.onload = function(){
+        init();
+        loop();
+    }
+
 }
 /**
  * Resets
@@ -219,23 +228,5 @@ function draw() {
 // start and run the game
 main()
 var record = 100;
-
-
-
-function getCookie(c_name)
-{
-    if (document.cookie.length>0)
-    {
-        c_start=document.cookie.indexOf(c_name + "=");
-        if (c_start!=-1)
-        {
-            c_start=c_start + c_name.length+1 ;
-            c_end=document.cookie.indexOf(";",c_start);
-            if (c_end==-1) c_end=document.cookie.length
-            return unescape(document.cookie.substring(c_start,c_end));
-        }
-    }
-    return "";
-}
 
 
