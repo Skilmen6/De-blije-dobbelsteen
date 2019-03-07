@@ -111,9 +111,14 @@ var fromR = 1;
 var fromI = 1;
 var jumpArrW = [];
 var jumpArrZ = [];
+var lastPosW = false;
+var lastPosZ = false;
+var lastPosJumpW = [];
+var lastPosJumpZ = [];
+var lastJumpW = true;
+var lastJumpZ = true;
 
 function movePiece(elem) {
-
   if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && player == "W") {
     from = elem;
     console.log(player);
@@ -121,27 +126,67 @@ function movePiece(elem) {
   if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && player == "W") {
     checkJump();
     // jumpOptW();
-    for (i=0; i < jumpArrW.length; i++){
-    if (jumpArrW[i]) {
-      var jumpR = parseInt(jumpArrW[i][0]);
-      var jumpI = parseInt(jumpArrW[i][1]);
+    console.log(lastPosW);
+    if (lastPosW) {
+      lastPosCheck();
+      if (lastPosJumpW[0]) {
+        for (i = 0; i < lastPosJumpW.length; i++) {
+          if (lastPosJumpW[i]) {
+            var jumpR = parseInt(lastPosJumpW[i][0]);
+            var jumpI = parseInt(lastPosJumpW[i][1]);
+            console.log(lastPosJumpW);
 
-      var posfrom = from.id.split(".");
-      fromR = parseInt(posfrom[0]);
-      fromI = parseInt(posfrom[1]);
+            var posfrom = from.id.split(".");
+            fromR = parseInt(posfrom[0]);
+            fromI = parseInt(posfrom[1]);
 
-      if (jumpR == fromR && jumpI == fromI) {
-        jumpPieceW(from, elem);
-      } else if ( jumpR !== fromR && jumpI !== fromI) {
-        alert("U moet slaan");
-        from = false;
-        jumpArrW = [];
+            if (jumpR == fromR && jumpI == fromI) {
+              jumpPieceW(from, elem);
+            } else if (jumpR !== fromR && jumpI !== fromI) {
+              alert("U moet slaan");
+              from = false;
+              jumpArrW = [];
+            }
+          }
+        }
+      } else {
+        player = "Z";
+      }
+      if (lastPosJumpW[0]){
+        lastJumpW = false;
+      } else {
+        lastPosW = false;
+        lastJumpW = true;
       }
     }
-  }
+    for (i = 0; i < jumpArrW.length; i++) {
+      if (jumpArrW[i] && lastJumpW) {
+        var jumpR = parseInt(jumpArrW[i][0]);
+        var jumpI = parseInt(jumpArrW[i][1]);
+
+        var posfrom = from.id.split(".");
+        fromR = parseInt(posfrom[0]);
+        fromI = parseInt(posfrom[1]);
+
+        console.log(i);
+        console.log(jumpArrW);
+        console.log(jumpR);
+        console.log(fromR);
+        console.log(jumpI);
+        console.log(fromI);
+        if (jumpR == fromR && jumpI == fromI) {
+          jumpPieceW(from, elem);
+        } else if (jumpR !== fromR && jumpI !== fromI) {
+          alert("U moet slaan");
+          from = false;
+          jumpArrW = [];
+        }
+      }
+    }
+    lastPosJumpW = [];
   }
   if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && isLegalMoveW(from, elem) && player == "W") {
-    if (jumpPieceW(from, elem)) {
+    if (jumpPieceW(from, elem) && lastPosJumpW[0] !== true) {
       movePieceW(from, elem);
     } else {
       alert("u moet slaan");
@@ -155,27 +200,65 @@ function movePiece(elem) {
   if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && player == "Z") {
     checkJump();
     // jumpOptZ();
+    console.log(lastPosZ);
+    if (lastPosZ) {
+      lastPosCheck();
+      console.log(lastPosJumpZ);
+      if (lastPosJumpZ[0]) {
+        for (i = 0; i < lastPosJumpZ.length; i++) {
+          if (lastPosJumpZ[i]) {
+            var jumpR = parseInt(lastPosJumpZ[i][0]);
+            var jumpI = parseInt(lastPosJumpZ[i][1]);
+            console.log(lastPosJumpZ);
+
+            var posfrom = from.id.split(".");
+            fromR = parseInt(posfrom[0]);
+            fromI = parseInt(posfrom[1]);
+            if (jumpR == fromR && jumpI == fromI) {
+              jumpPieceZ(from, elem);
+            } else if (jumpR !== fromR && jumpI !== fromI) {
+              alert("U moet slaan");
+              from = false;
+              jumpArrZ = [];
+            }
+          }
+        }
+      } else {
+        player = "W";
+      }
+      if (lastPosJumpZ[0]){
+        lastJumpZ = false;
+      } else {
+        lastPosZ = false;
+        lastJumpZ = true;
+      }
+    }
     for (i = 0; i < jumpArrZ.length; i++) {
-      if (jumpArrZ[i]) {
+      if (jumpArrZ[i] && lastJumpZ) {
         var jumpR = parseInt(jumpArrZ[i][0]);
         var jumpI = parseInt(jumpArrZ[i][1]);
 
         var posfrom = from.id.split(".");
         fromR = parseInt(posfrom[0]);
         fromI = parseInt(posfrom[1]);
+        console.log(jumpArrZ[i]);
+        console.log(jumpR);
+        console.log(fromR);
+        console.log(jumpI);
+        console.log(fromI);
         if (jumpR == fromR && jumpI == fromI) {
           jumpPieceZ(from, elem);
-        }
-        else if (jumpR !== fromR && jumpI !== fromI) {
+        } else if (jumpR !== fromR && jumpI !== fromI) {
           alert("U moet slaan");
           from = false;
           jumpArrZ = [];
         }
       }
     }
+    lastPosJumpZ = [];
   }
   if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && isLegalMoveZ(from, elem) && player == "Z") {
-    if (jumpPieceZ(from, elem)) {
+    if (jumpPieceZ(from, elem) && lastPosJumpZ[0] !== true) {
       movePieceZ(from, elem);
     } else {
       alert("u moet slaan");
@@ -219,7 +302,6 @@ function isLegalMoveZ(from, elem) {
 
 function movePieceW(from, elem) {
   jumpArrW = [];
-  checkJump();
   var container = document.getElementById("game-container");
   var posfrom = from.id.split(".");
   var posto = elem.id.split(".");
@@ -232,14 +314,29 @@ function movePieceW(from, elem) {
 
   board[toR].splice(toI, 1, "W");
   board[fromR].splice(fromI, 1, "b");
-  console.log(jumpW);
+  checkJump();
+  // console.log(jumpW);
+  // console.log(jumpArrW[0])
+  console.log(lastPosJumpW);
   if (jumpArrW[0] && jumpW == true) {
-    player == "W";
+    player = "W";
     console.log(player);
+    jumpArrW = [];
+    lastPosW = elem;
+  }
+  lastPosJumpW = [];
+  lastPosCheck();
+  if (lastPosJumpW[0]) {
+    player = "W";
+    console.log(player);
+    jumpArrW = [];
+    lastPosW = elem;
   } else {
-  jumpArrW = [];
-  player = "Z";
-  jumpW = false;
+    lastPosW = false;
+    jumpArrW = [];
+    lastPosJumpW = [];
+    player = "Z";
+    jumpW = false;
   }
   from = false;
   clearChildren(container);
@@ -248,7 +345,6 @@ function movePieceW(from, elem) {
 
 function movePieceZ(from, elem) {
   jumpArrZ = [];
-  checkJump();
   var container = document.getElementById("game-container");
   var posfrom = from.id.split(".");
   var posto = elem.id.split(".");
@@ -261,14 +357,29 @@ function movePieceZ(from, elem) {
 
   board[toR].splice(toI, 1, "Z");
   board[fromR].splice(fromI, 1, "b");
-  console.log(jumpZ);
+  checkJump();
+  // console.log(jumpZ);
+  // console.log(jumpArrZ[0])
+  console.log(lastPosJumpZ);
   if (jumpArrZ[0] && jumpZ == true) {
-    player == "Z";
+    player = "Z";
     console.log(player);
+    jumpArrZ = [];
+    lastPosZ = elem;
+  }
+  lastPosJumpZ = [];
+  lastPosCheck();
+  if (lastPosJumpZ[0]) {
+    player = "Z";
+    console.log(player);
+    jumpArrZ = [];
+    lastPosZ = elem;
   } else {
-  jumpArrZ = [];
-  jumpZ = false;
-  player = "W";
+    lastPosZ = false;
+    jumpArrZ = [];
+    lastPosJumpZ = [];
+    player = "W";
+    jumpZ = false;
   }
   from = false;
   clearChildren(container);
@@ -497,24 +608,80 @@ function jumpPieceZ(from, elem) {
   return true;
 }
 
-// function jumpOptW() {
-//   for (i = 0; i < jumpArrW.length; i++) {
-//     var jumpRow = jumpArrW[i][0];
-//     var jumpIndex = jumpArrW[i][1];
-//     var jumpsteen = document.getElementById(jumpRow + "." + jumpIndex);
-//
-//     jumpsteen.jump = true;
-//     // console.log(jumpsteen);
-//   }
-// }
-//
-// function jumpOptZ() {
-//   for (i = 0; i < jumpArrZ.length; i++) {
-//     var jumpRow = jumpArrZ[i][0];
-//     var jumpIndex = jumpArrZ[i][1];
-//     var jumpsteen = document.getElementById(jumpRow + "." + jumpIndex);
-//
-//     jumpsteen.jump = true;
-//     // console.log(jumpsteen);
-//   }
-// }
+function lastPosCheck() {
+  if (lastPosW && player == "W") {
+    var posfrom = lastPosW.id.split(".");
+
+    var fromR = parseInt(posfrom[0]);
+    var fromI = parseInt(posfrom[1]);
+    if (board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI - 1] == "Z" && board[fromR - 2][fromI - 2] == "b") {
+      var rsis = fromR + "." + fromI;
+      var rsisarr = rsis.split(".");
+      rsisarr[2] = "--";
+      lastPosJumpW.push(rsisarr);
+      console.log(lastPosJumpW);
+
+    }
+    if (board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI + 1] == "Z" && board[fromR - 2][fromI + 2] == "b") {
+      var rsis = fromR + "." + fromI;
+      var rsisarr = rsis.split(".");
+      rsisarr[2] = "-+";
+      lastPosJumpW.push(rsisarr);
+      console.log(lastPosJumpW);
+
+    }
+    if (board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI - 1] == "Z" && board[fromR + 2][fromI - 2] == "b") {
+      var rsis = fromR + "." + fromI;
+      var rsisarr = rsis.split(".");
+      rsisarr[2] = "+-";
+      lastPosJumpW.push(rsisarr);
+      console.log(lastPosJumpW);
+
+    }
+    if (board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI + 1] == "Z" && board[fromR + 2][fromI + 2] == "b") {
+      var rsis = fromR + "." + fromI;
+      var rsisarr = rsis.split(".");
+      rsisarr[2] = "++";
+      lastPosJumpW.push(rsisarr);
+      console.log(lastPosJumpW);
+
+    }
+  } else if (lastPosZ && player == "Z") {
+    var posfrom = lastPosZ.id.split(".");
+
+    var fromR = parseInt(posfrom[0]);
+    var fromI = parseInt(posfrom[1]);
+    if (board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI - 1] == "W" && board[fromR - 2][fromI - 2] == "b") {
+      var rsis = fromR + "." + fromI;
+      var rsisarr = rsis.split(".");
+      rsisarr[2] = "--";
+      lastPosJumpZ.push(rsisarr);
+      console.log(lastPosJumpZ);
+
+    }
+    if (board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI + 1] == "W" && board[fromR - 2][fromI + 2] == "b") {
+      var rsis = fromR + "." + fromI;
+      var rsisarr = rsis.split(".");
+      rsisarr[2] = "-+";
+      lastPosJumpZ.push(rsisarr);
+      console.log(lastPosJumpZ);
+
+    }
+    if (board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI - 1] == "W" && board[fromR + 2][fromI - 2] == "b") {
+      var rsis = fromR + "." + fromI;
+      var rsisarr = rsis.split(".");
+      rsisarr[2] = "+-";
+      lastPosJumpZ.push(rsisarr);
+      console.log(lastPosJumpZ);
+
+    }
+    if (board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI + 1] == "W" && board[fromR + 2][fromI + 2] == "b") {
+      var rsis = fromR + "." + fromI;
+      var rsisarr = rsis.split(".");
+      rsisarr[2] = "++";
+      lastPosJumpZ.push(rsisarr);
+      console.log(lastPosJumpZ);
+
+    }
+  }
+}
