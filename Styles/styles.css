@@ -23,7 +23,7 @@ header h2 {
 	
 }
 
-.idk {
+.games {
 	margin-bottom: 60px;
 	margin-top: 20px;
 	position: relative;
@@ -49,8 +49,19 @@ nav ul li {
 	padding-bottom: 7px;
 }
 
+.li {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.enabled {
+	background: #72AF9E;
+}
 
 .logo {
+	padding-top: 3px;
 	height: 20%;
 	width: 10%;
 	float: left;
