@@ -108,7 +108,10 @@ footer {
 	padding-top: 7px;
 }
 
-
+footer h4 {
+	width: 100%;
+	
+}
 
 .teksten {
 	margin-left: 10%;
