@@ -96,8 +96,13 @@ a {
 	left: 15px;
 }
 
-p {
+.gamename {
 	font-size: 20px;
+}
+
+.p {
+	font-size: 20px;
+	margin: 0px;
 }
 
 footer {
@@ -108,9 +113,24 @@ footer {
 	padding-top: 7px;
 }
 
-footer h4 {
-	width: 100%;
-	
+footer div p {
+	margin-bottom: 20px;
+	position: relative;
+	bottom: 20px;
+}
+
+footer div {
+	margin-top: 10px;
+}
+
+.block {
+	display: inline-block;
+}
+
+.TFlogo {
+	margin-top: 10px;
+	margin-right: 5px;
+	margin-bottom: 10px;
 }
 
 .teksten {
