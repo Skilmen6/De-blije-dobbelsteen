@@ -17,6 +17,8 @@ var jumpZ = false;
 var jumpW = false;
 createBoard();
 
+//http://509704.student4a8.ao-ica.nl/De-blije-dobbelsteen/Img/Wittedam.png
+
 function createBoard() {
   var container = document.getElementById("game-container");
 
@@ -53,11 +55,42 @@ function createBoard() {
           white.setAttribute("id", r + "." + i);
           empty.appendChild(white);
           break;
+        case "Wd":
+          var empty = row.appendChild(createEmptyW());
+          var whitedam = createWhiteDam();
+          whitedam.setAttribute("id", r + "." + i);
+          empty.appendChild(whitedam);
+          break;
+
+        case "Zd":
+          var empty = row.appendChild(createEmptyW());
+          var blackdam = createBlackDam();
+          blackdam.setAttribute("id", r + "." + i);
+          empty.appendChild(blackdam);
+          break;
       }
     }
   }
 }
 
+function createWhiteDam(){
+  var whitedam = document.createElement("img");
+  whitedam.setAttribute("src", "Img/Wittedam.png");
+
+  whitedam.addEventListener("click", function() {
+    movePiece(this);
+  });
+  return whitedam;
+}
+function createBlackDam(){
+  var blackdam = document.createElement("img");
+  blackdam.setAttribute("src", "Img/Zwartedam.png");
+
+  blackdam.addEventListener("click", function() {
+    movePiece(this);
+  });
+  return blackdam;
+}
 function createBlack() {
   var black = document.createElement("img");
   black.setAttribute("src", "Img/Zwartesteen.png");
@@ -70,7 +103,7 @@ function createBlack() {
 
 function createWhite() {
   var white = document.createElement("img");
-  white.setAttribute("src", "Img/wittesteen.png");
+  white.setAttribute("src", "Img/Wittesteen.png");
 
   white.addEventListener("click", function() {
     movePiece(this);
@@ -127,7 +160,7 @@ function movePiece(elem) {
     alert("Zwart heeft gewonnen");
     return true;
   }
-  if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && player == "W") {
+  if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Wittesteen.png" && player == "W") {
     if (from){
       from.style.border = "none";
     }
@@ -135,7 +168,7 @@ function movePiece(elem) {
     from.style.border = "1px solid red";
     console.log(player);
   }
-  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && player == "W") {
+  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Wittesteen.png" && player == "W") {
     checkJump();
     // jumpOptW();
     console.log(lastPosW);
@@ -197,7 +230,7 @@ function movePiece(elem) {
     }
     lastPosJumpW = [];
   }
-  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" && isLegalMoveW(from, elem) && player == "W") {
+  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Wittesteen.png" && isLegalMoveW(from, elem) && player == "W") {
     if (jumpPieceW(from, elem) && lastPosJumpW[0] !== true) {
       movePieceW(from, elem);
     } else {
@@ -309,7 +342,7 @@ function isLegalMoveZ(from, elem) {
   var toR = parseInt(posto[0]);
   var toI = parseInt(posto[1]);
 
-  if (toR == fromR + 1 && toI == fromI - 1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png" || toI == fromI + 1 && toR == fromR + 1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/wittesteen.png") {
+  if (toR == fromR + 1 && toI == fromI - 1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/Wittesteen.png" || toI == fromI + 1 && toR == fromR + 1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/Wittesteen.png") {
     return true;
   } else {
     return false;
