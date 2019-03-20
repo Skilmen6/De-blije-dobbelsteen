@@ -15,7 +15,8 @@ canvas {
 
 }
 
-body {font-family: Arial, Helvetica, sans-serif;}
+body {
+    font-family: Arial, Helvetica, sans-serif;}
 .modal {
     display: none;
     position: fixed;
@@ -64,7 +65,52 @@ body {font-family: Arial, Helvetica, sans-serif;}
     border-radius: 15px 15px 15px 15px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
-.mid{text-align: center;}
+.mid {
+    text-align: center;}
 
+@media only screen and (max-width:800px) {
+    .modal-content img {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    body {
+        background: darkgrey;
+        align-items: center;
+        justify-content: enter;
+        background: url(img/gras.jpg);
+    }
+    canvas {
+        width: 100%;
+        border: 10px solid #593310;
+        top: 80px;
+        left: 1px;
+        background-image: url(img/gras2.jpg);
+        box-shadow: 16px 17px 91px 14px rgba(0,0,0,0.5);
+
+    }
+    .button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        -webkit-transition-duration: 0.4s; /* Safari */
+        transition-duration: 0.4s;
+        border-radius: 15px 15px 15px 15px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    }
+
+    .mid {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
 
 
