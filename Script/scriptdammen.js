@@ -15,6 +15,8 @@ var Zstones = 20;
 var player = "W";
 var jumpZ = false;
 var jumpW = false;
+var witsrc;
+var zwartsrc;
 createBoard();
 
 //http://509704.student4a8.ao-ica.nl/De-blije-dobbelsteen/Img/Wittedam.png
@@ -30,7 +32,6 @@ function createBoard() {
 
       switch (board[r][i]) {
         case "c":
-          ;
           var empty = createEmptyW();
           empty.setAttribute("id", r + "." + i);
           row.appendChild(empty);
@@ -73,16 +74,16 @@ function createBoard() {
   }
 }
 
-function createWhiteDam(){
+function createWhiteDam() {
   var whitedam = document.createElement("img");
   whitedam.setAttribute("src", "Img/Wittedam.png");
-
   whitedam.addEventListener("click", function() {
     movePiece(this);
   });
   return whitedam;
 }
-function createBlackDam(){
+
+function createBlackDam() {
   var blackdam = document.createElement("img");
   blackdam.setAttribute("src", "Img/Zwartedam.png");
 
@@ -91,9 +92,11 @@ function createBlackDam(){
   });
   return blackdam;
 }
+
 function createBlack() {
   var black = document.createElement("img");
   black.setAttribute("src", "Img/Zwartesteen.png");
+  zwartsrc = black.src;
 
   black.addEventListener("click", function() {
     movePiece(this);
@@ -104,6 +107,7 @@ function createBlack() {
 function createWhite() {
   var white = document.createElement("img");
   white.setAttribute("src", "Img/Wittesteen.png");
+  witsrc = white.src;
 
   white.addEventListener("click", function() {
     movePiece(this);
@@ -152,23 +156,23 @@ var lastJumpW = true;
 var lastJumpZ = true;
 
 function movePiece(elem) {
-  if (Zstones == 0){
+  if (Zstones == 0) {
     alert("Wit heeft gewonnen");
     return true;
   }
-  if (Wstones == 0){
+  if (Wstones == 0) {
     alert("Zwart heeft gewonnen");
     return true;
   }
-  if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Wittesteen.png" && player == "W") {
-    if (from){
+  if (elem.src == witsrc && player == "W") {
+    if (from) {
       from.style.border = "none";
     }
     from = elem;
     from.style.border = "1px solid red";
     console.log(player);
   }
-  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Wittesteen.png" && player == "W") {
+  if (from.src == witsrc && player == "W") {
     checkJump();
     // jumpOptW();
     console.log(lastPosW);
@@ -197,7 +201,7 @@ function movePiece(elem) {
       } else {
         player = "Z";
       }
-      if (lastPosJumpW[0]){
+      if (lastPosJumpW[0]) {
         lastJumpW = false;
       } else {
         lastPosW = false;
@@ -230,7 +234,7 @@ function movePiece(elem) {
     }
     lastPosJumpW = [];
   }
-  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Wittesteen.png" && isLegalMoveW(from, elem) && player == "W") {
+  if (from.src == witsrc && isLegalMoveW(from, elem) && player == "W") {
     if (jumpPieceW(from, elem) && lastPosJumpW[0] !== true) {
       movePieceW(from, elem);
     } else {
@@ -238,15 +242,15 @@ function movePiece(elem) {
     }
   }
 
-  if (elem.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && player == "Z") {
+  if (elem.src == zwartsrc && player == "Z") {
     console.log(player);
-    if (from){
+    if (from) {
       from.style.border = "none";
     }
     from = elem;
     from.style.border = "1px solid red";
   }
-  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && player == "Z") {
+  if (from.src == zwartsrc && player == "Z") {
     checkJump();
     // jumpOptZ();
     console.log(lastPosZ);
@@ -275,7 +279,7 @@ function movePiece(elem) {
       } else {
         player = "W";
       }
-      if (lastPosJumpZ[0]){
+      if (lastPosJumpZ[0]) {
         lastJumpZ = false;
       } else {
         lastPosZ = false;
@@ -306,7 +310,7 @@ function movePiece(elem) {
     }
     lastPosJumpZ = [];
   }
-  if (from.src == "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" && isLegalMoveZ(from, elem) && player == "Z") {
+  if (from.src == zwartsrc && isLegalMoveZ(from, elem) && player == "Z") {
     if (jumpPieceZ(from, elem) && lastPosJumpZ[0] !== true) {
       movePieceZ(from, elem);
     } else {
@@ -325,7 +329,7 @@ function isLegalMoveW(from, elem) {
   var toR = parseInt(posto[0]);
   var toI = parseInt(posto[1]);
 
-  if (toR == fromR - 1 && toI == fromI - 1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png" || toI == fromI + 1 && toR == fromR - 1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/Zwartesteen.png") {
+  if (toR == fromR - 1 && toI == fromI - 1 && elem.src !== zwartsrc || toI == fromI + 1 && toR == fromR - 1 && elem.src !== zwartsrc) {
     return true;
   } else {
     return false;
@@ -342,7 +346,7 @@ function isLegalMoveZ(from, elem) {
   var toR = parseInt(posto[0]);
   var toI = parseInt(posto[1]);
 
-  if (toR == fromR + 1 && toI == fromI - 1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/Wittesteen.png" || toI == fromI + 1 && toR == fromR + 1 && elem.src !== "http://localhost/Github/De-blije-dobbelsteen/Img/Wittesteen.png") {
+  if (toR == fromR + 1 && toI == fromI - 1 && elem.src !== witsrc || toI == fromI + 1 && toR == fromR + 1 && elem.src !== witsrc) {
     return true;
   } else {
     return false;
@@ -361,8 +365,13 @@ function movePieceW(from, elem) {
   var toR = parseInt(posto[0]);
   var toI = parseInt(posto[1]);
 
-  board[toR].splice(toI, 1, "W");
-  board[fromR].splice(fromI, 1, "b");
+  if (toR == 0) {
+    board[toR].splice(toI, 1, "Wd");
+    board[fromR].splice(fromI, 1, "b");
+  } else {
+    board[toR].splice(toI, 1, "W");
+    board[fromR].splice(fromI, 1, "b");
+  }
   checkJump();
   // console.log(jumpW);
   // console.log(jumpArrW[0])
@@ -404,8 +413,13 @@ function movePieceZ(from, elem) {
   var toR = parseInt(posto[0]);
   var toI = parseInt(posto[1]);
 
-  board[toR].splice(toI, 1, "Z");
-  board[fromR].splice(fromI, 1, "b");
+  if (toR == 9) {
+    board[toR].splice(toI, 1, "Zd");
+    board[fromR].splice(fromI, 1, "b");
+  } else {
+    board[toR].splice(toI, 1, "Z");
+    board[fromR].splice(fromI, 1, "b");
+  }
   checkJump();
   // console.log(jumpZ);
   // console.log(jumpArrZ[0])
@@ -554,7 +568,7 @@ function jumpPieceW(from, elem) {
           if (toR == fromR - 2 && toI == fromI - 2) {
             board[fromR - 1].splice(fromI - 1, 1, "b");
             jumpW = true;
-            Zstones = Zstones -1;
+            Zstones = Zstones - 1;
             movePieceW(from, elem);
           } else if (isLegalMoveW(from, elem)) {
             from = false;
@@ -565,7 +579,7 @@ function jumpPieceW(from, elem) {
           if (toR == fromR - 2 && toI == fromI + 2) {
             board[fromR - 1].splice(fromI + 1, 1, "b");
             jumpW = true;
-            Zstones = Zstones -1;
+            Zstones = Zstones - 1;
             movePieceW(from, elem);
           } else if (isLegalMoveW(from, elem)) {
             from = false;
@@ -576,7 +590,7 @@ function jumpPieceW(from, elem) {
           if (toR == fromR + 2 && toI == fromI - 2) {
             board[fromR + 1].splice(fromI - 1, 1, "b");
             jumpW = true;
-            Zstones = Zstones -1;
+            Zstones = Zstones - 1;
             movePieceW(from, elem);
           } else if (isLegalMoveW(from, elem)) {
             from = false;
@@ -587,7 +601,7 @@ function jumpPieceW(from, elem) {
           if (toR == fromR + 2 && toI == fromI + 2) {
             board[fromR + 1].splice(fromI + 1, 1, "b");
             jumpW = true;
-            Zstones = Zstones -1;
+            Zstones = Zstones - 1;
             movePieceW(from, elem);
           } else if (isLegalMoveW(from, elem)) {
             from = false;
@@ -618,7 +632,7 @@ function jumpPieceZ(from, elem) {
           if (toR == fromR - 2 && toI == fromI - 2) {
             board[fromR - 1].splice(fromI - 1, 1, "b");
             jumpZ = true;
-            Wstones = Wstones -1;
+            Wstones = Wstones - 1;
             movePieceZ(from, elem);
           } else if (isLegalMoveZ(from, elem)) {
             from = false;
@@ -629,7 +643,7 @@ function jumpPieceZ(from, elem) {
           if (toR == fromR - 2 && toI == fromI + 2) {
             board[fromR - 1].splice(fromI + 1, 1, "b");
             jumpZ = true;
-            Wstones = Wstones -1;
+            Wstones = Wstones - 1;
             movePieceZ(from, elem);
           } else if (isLegalMoveZ(from, elem)) {
             from = false;
@@ -640,7 +654,7 @@ function jumpPieceZ(from, elem) {
           if (toR == fromR + 2 && toI == fromI - 2) {
             board[fromR + 1].splice(fromI - 1, 1, "b");
             jumpZ = true;
-            Wstones = Wstones -1;
+            Wstones = Wstones - 1;
             movePieceZ(from, elem);
           } else if (isLegalMoveZ(from, elem)) {
             from = false;
@@ -651,7 +665,7 @@ function jumpPieceZ(from, elem) {
           if (toR == fromR + 2 && toI == fromI + 2) {
             board[fromR + 1].splice(fromI + 1, 1, "b");
             jumpZ = true;
-            Wstones = Wstones -1;
+            Wstones = Wstones - 1;
             movePieceZ(from, elem);
           } else if (isLegalMoveZ(from, elem)) {
             from = false;
