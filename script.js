@@ -111,7 +111,7 @@ function main() {
 
     background.src = "img/gras2.jpg";
 
-// Make sure the image is loaded first otherwise nothing will draw.
+// Make sure the image 
     background.onload = function(){
         init();
         loop();
