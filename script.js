@@ -1,4 +1,18 @@
 
+if(typeof(localStorage.getItem("highscore"))=='undefined'){
+    localStorage.setItem('highscore',0);
+}
+if(typeof(localStorage.getItem("top1"))=='undefined') {
+    localStorage.setItem('top1', 0);
+}
+if(typeof(localStorage.getItem("top2"))=='undefined') {
+    localStorage.setItem('top2', 0);
+}
+if(typeof(localStorage.getItem("top3"))=='undefined') {
+    localStorage.setItem('top3', 0);
+}
+
+
 var
 
     COLS = 26,
@@ -20,7 +34,7 @@ var
     keystate,
     frames,
     score,
-    highscore = 0;
+    highscore = localStorage.getItem('highscore');
 
 grid = {
     width: null,
@@ -111,7 +125,7 @@ function main() {
 
     background.src = "img/gras2.jpg";
 
-// Make sure the image 
+// Make sure the image is loaded first otherwise nothing will draw.
     background.onload = function(){
         init();
         loop();
@@ -178,9 +192,34 @@ function update() {
             0 > ny || ny > grid.height-1 ||
             grid.get(nx, ny) === SNAKE
         ) {
+            // hier begint leaderboard
             if(score > highscore) {
+                // console.log(score);
+                // console.log(highscore);
+                // console.log(localStorage.getItem('highscore'));
                 highscore = score;
+                localStorage.setItem('highscore', score);
+                console.log("top1="+localStorage.getItem('top1'))
+                console.log("top2="+localStorage.getItem('top2'))
+                console.log("top3="+localStorage.getItem('top3'))
             }
+            if(score > localStorage.getItem('top1')){
+                localStorage.setItem('top1', score);
+            }
+            else if(score > localStorage.getItem('top2')){
+                localStorage.setItem('top2', score);
+            }
+            else if(score > localStorage.getItem('top3')){
+                localStorage.setItem('top3', score);
+            }
+            document.getElementById('top1').innerHTML = "top1="+localStorage.getItem('top1');
+            document.getElementById('top2').innerHTML = "top2="+localStorage.getItem('top2');
+            document.getElementById('top3').innerHTML = "top3="+localStorage.getItem('top3');
+
+            // if (score > localstorage.getItem('highscore')){
+            //     localstorage.setItem('highscore', score)
+            // }
+            alert('je bent af klik op de "ok" knop om opnieuw te beginnen')
             return init();
         }
         if (grid.get(nx, ny) === FRUIT) {
@@ -229,6 +268,7 @@ function draw() {
 main()
 var record = 100;
 
+
 var modal = document.getElementById('myModal');
 var btn = document.getElementById("myBtn");
 var span = document.getElementsByClassName("close")[0];
@@ -238,10 +278,6 @@ btn.onclick = function() {
 span.onclick = function() {
     modal.style.display = "none";
 }
-
-
-
-
 
 
 
