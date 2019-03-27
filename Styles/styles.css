@@ -20,7 +20,7 @@ header h2 {
 	padding-right: 12%;
 	width: 75%;
 	float: right;
-	
+
 }
 
 .games {
@@ -31,7 +31,7 @@ header h2 {
 
 nav {
 	width: 85%;
-	
+
 }
 
 nav ul {
@@ -59,6 +59,10 @@ a {
 	padding-bottom: 5px;
 	padding-left: 15px;
 	padding-right: 15px;
+}
+
+.li:hover{
+	background: #72AF9E;
 }
 
 .enabled {
