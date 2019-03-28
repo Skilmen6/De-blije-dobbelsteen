@@ -3,13 +3,13 @@ if(typeof(localStorage.getItem("highscore"))=='undefined'){
     localStorage.setItem('highscore',0);
 }
 if(typeof(localStorage.getItem("top1"))=='undefined') {
-    localStorage.setItem('top1', 0);
+    localStorage.setItem('top1-name', name);
 }
 if(typeof(localStorage.getItem("top2"))=='undefined') {
-    localStorage.setItem('top2', 0);
+    localStorage.setItem('top2-name', name);
 }
 if(typeof(localStorage.getItem("top3"))=='undefined') {
-    localStorage.setItem('top3', 0);
+    localStorage.setItem('top3-name', name);
 }
 
 
@@ -204,22 +204,30 @@ function update() {
                 console.log("top3="+localStorage.getItem('top3'))
             }
             if(score > localStorage.getItem('top1')){
+                var name = prompt("Highscore! Wat is je naam?")
                 localStorage.setItem('top1', score);
+                localStorage.setItem('top1-name', name);
             }
             else if(score > localStorage.getItem('top2')){
+                var name = prompt("Highscore! Wat is je naam?")
+                alert(name);
                 localStorage.setItem('top2', score);
+                localStorage.setItem('top2-name', name);
             }
             else if(score > localStorage.getItem('top3')){
+                var name = prompt("Highscore! Wat is je naam?")
+                alert(name);
                 localStorage.setItem('top3', score);
+                localStorage.setItem('top3-name', name);
             }
-            document.getElementById('top1').innerHTML = "top1="+localStorage.getItem('top1');
-            document.getElementById('top2').innerHTML = "top2="+localStorage.getItem('top2');
-            document.getElementById('top3').innerHTML = "top3="+localStorage.getItem('top3');
+            document.getElementById('top1').innerHTML = localStorage.getItem('top1-name') + " = "+localStorage.getItem('top1');
+            document.getElementById('top2').innerHTML = localStorage.getItem('top2-name') + " = "+localStorage.getItem('top2');
+            document.getElementById('top3').innerHTML = localStorage.getItem('top3-name') + " = "+localStorage.getItem('top3');
 
             // if (score > localstorage.getItem('highscore')){
             //     localstorage.setItem('highscore', score)
             // }
-            alert('je bent af klik op de "ok" knop om opnieuw te beginnen')
+            //alert('Je bent af klik op de "OK" knop om opnieuw te beginnen')
             return init();
         }
         if (grid.get(nx, ny) === FRUIT) {
@@ -236,6 +244,7 @@ function update() {
         snake.insert(nx, ny);
     }
 }
+
 
 function draw() {
 
@@ -278,6 +287,9 @@ btn.onclick = function() {
 span.onclick = function() {
     modal.style.display = "none";
 }
+var record = 100;
+
+
 
 
 
