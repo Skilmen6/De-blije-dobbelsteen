@@ -29,6 +29,8 @@ var
     KEY_RIGHT = 39,
     KEY_DOWN = 40,
 
+
+
     canvas,
     ctx,
     keystate,
@@ -289,7 +291,7 @@ span.onclick = function() {
 }
 var record = 100;
 
-
+h
 
 
 
