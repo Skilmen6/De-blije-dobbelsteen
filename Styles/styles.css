@@ -171,3 +171,15 @@ input[type=submit]:hover {
   border-radius: 5px;
   padding: 20px;
 }
+.teksten {
+	font-size: 1.0em;
+	font-family: Arial Verdana;
+}
+.snake-img {
+	position: absolute;
+	left: 80%;
+}
+.dam-img {
+	position: absolute;
+	left: 80%;
+}
