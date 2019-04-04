@@ -13,13 +13,67 @@ var board = [
 var Wstones = 20;
 var Zstones = 20;
 var player = "W";
-var jumpZ = false;
-var jumpW = false;
-var witsrc;
-var zwartsrc;
-createBoard();
+var witsrc = null;
+var zwartsrc = null;
+var wittedamsrc = "wittedam";
+var zwartedamsrc = "zwartedam";
 
-//http://509704.student4a8.ao-ica.nl/De-blije-dobbelsteen/Img/Wittedam.png
+var from = false;
+// var fromR = 1;
+// var fromI = 1;
+var jump = [
+  [
+    ["W"],
+    [false]
+  ],
+  [
+    ["Z"]
+    [false]
+  ]
+];
+
+var jumpArr = [
+  [
+    ["W"]
+  ],
+  [
+    ["Z"]
+  ]
+];
+
+var lastPos = [
+  [
+    ["W"]
+  ],
+  [
+    ["Z"]
+  ]
+];
+
+var lastPosJump = [
+  [
+    ["W"]
+  ],
+  [
+    ["Z"]
+  ]
+];
+var lastJump = [
+  [
+    ["W"],
+    [true]
+  ],
+  [
+    ["Z"],
+    [true]
+  ]
+];
+var dam;
+var index;
+var enemy;
+var ally;
+var src;
+createBoard();
 
 function createBoard() {
   var container = document.getElementById("game-container");
@@ -77,8 +131,10 @@ function createBoard() {
 function createWhiteDam() {
   var whitedam = document.createElement("img");
   whitedam.setAttribute("src", "Img/Wittedam.png");
+  wittedamsrc = whitedam.src;
+
   whitedam.addEventListener("click", function() {
-    movePiece(this);
+    moveStart(this, wittedamsrc, "Z", "W", 0, true, zwartsrc, zwartedamsrc);
   });
   return whitedam;
 }
@@ -86,9 +142,10 @@ function createWhiteDam() {
 function createBlackDam() {
   var blackdam = document.createElement("img");
   blackdam.setAttribute("src", "Img/Zwartedam.png");
+  zwartedamsrc = blackdam.src;
 
   blackdam.addEventListener("click", function() {
-    movePiece(this);
+    moveStart(this, zwartedamsrc, "W", "Z", 1, true, witsrc, wittedamsrc);
   });
   return blackdam;
 }
@@ -99,7 +156,7 @@ function createBlack() {
   zwartsrc = black.src;
 
   black.addEventListener("click", function() {
-    movePiece(this);
+    moveStart(this, zwartsrc, "W", "Z", 1, false, witsrc, wittedamsrc);
   });
   return black;
 }
@@ -110,7 +167,7 @@ function createWhite() {
   witsrc = white.src;
 
   white.addEventListener("click", function() {
-    movePiece(this);
+    moveStart(this, witsrc, "Z", "W", 0, false, witsrc, wittedamsrc);
   });
   return white;
 }
@@ -130,9 +187,28 @@ function createEmptyW() {
 function createEmptyZ() {
   var empty = document.createElement("div");
   empty.setAttribute("class", "spelvak");
+  var src = "brown";
+  var enem;
+  var ind;
+  var play;
+  var enemydamsrc;
+  var enemysrc;
+  if (player == "W") {
+    play = "W";
+    enem = "Z";
+    ind = 0;
+    enemysrc = zwartsrc;
+    enemydamsrc = zwartedamsrc;
+  } else if (player == "Z") {
+    play = "Z";
+    enem = "W";
+    ind = 1;
+    enemysrc = witsrc;
+    enemydamsrc = wittedamsrc;
+  }
 
   empty.addEventListener("click", function() {
-    movePiece(this);
+    moveStart(this, src, enem, play, ind, false, enemysrc, enemydamsrc);
   });
   return empty;
 }
@@ -143,19 +219,27 @@ function clearChildren(p) {
   }
 }
 
-var from = false;
-var fromR = 1;
-var fromI = 1;
-var jumpArrW = [];
-var jumpArrZ = [];
-var lastPosW = false;
-var lastPosZ = false;
-var lastPosJumpW = [];
-var lastPosJumpZ = [];
-var lastJumpW = true;
-var lastJumpZ = true;
+function resetArray(arr) {
+  arr = [
+    [
+      ["W"]
+    ],
+    [
+      ["Z"]
+    ]
+  ];
+  return arr
+}
 
-function movePiece(elem) {
+function moveStart(elem, selfsrc, enemy, ally, index, dam, enemysrc, enemydamsrc) {
+  // console.log(elem);
+  // console.log(selfsrc);
+  // console.log(enemy);
+  // console.log(ally);
+  // console.log(index);
+  // console.log(dam);
+  // console.log(enemysrc);
+  // console.log(enemydamsrc);
   if (Zstones == 0) {
     alert("Wit heeft gewonnen");
     return true;
@@ -164,7 +248,7 @@ function movePiece(elem) {
     alert("Zwart heeft gewonnen");
     return true;
   }
-  if (elem.src == witsrc && player == "W") {
+  if (elem.src == selfsrc && player == ally) {
     if (from) {
       from.style.border = "none";
     }
@@ -172,587 +256,346 @@ function movePiece(elem) {
     from.style.border = "1px solid red";
     console.log(player);
   }
-  if (from.src == witsrc && player == "W") {
-    checkJump();
-    // jumpOptW();
-    console.log(lastPosW);
-    if (lastPosW) {
-      lastPosCheck();
-      if (lastPosJumpW[0]) {
-        for (i = 0; i < lastPosJumpW.length; i++) {
-          if (lastPosJumpW[i]) {
-            var jumpR = parseInt(lastPosJumpW[i][0]);
-            var jumpI = parseInt(lastPosJumpW[i][1]);
-            console.log(lastPosJumpW);
+  if (from.src == selfsrc && player == ally || player == ally && selfsrc == "brown") {
+    checkJump(enemy, ally, index, dam);
+    console.log(lastPos[index]);
+    if (lastPos[index][1]) {
+      lastPosCheck(enemy, ally, index, dam);
+      if (lastPosJump[index][1]) {
+        for (i = 0; i < lastPosJump[index].length - 1; i++) {
+          if (lastPosJump[index][i + 1]) {
+            var jumpR = parseInt(lastPosJump[index][i + 1][0]);
+            var jumpI = parseInt(lastPosJump[index][i + 1][1]);
+            console.log(lastPosJump[index]);
 
             var posfrom = from.id.split(".");
             fromR = parseInt(posfrom[0]);
             fromI = parseInt(posfrom[1]);
 
             if (jumpR == fromR && jumpI == fromI) {
-              jumpPieceW(from, elem);
+              jumpPiece(from, elem, ally, enemy, index, dam, enemysrc, enemydamsrc);
             } else if (jumpR !== fromR && jumpI !== fromI) {
               alert("U moet slaan");
               from = false;
-              jumpArrW = [];
+              jumpArr = resetArray(jumpArr);
             }
           }
         }
       } else {
-        player = "Z";
+        player = enemy;
       }
-      if (lastPosJumpW[0]) {
-        lastJumpW = false;
+      if (lastPosJump[index][1]) {
+        lastJump[index][1] = false;
       } else {
-        lastPosW = false;
-        lastJumpW = true;
+        lastPos = resetArray(lastPos);
+        lastJump[index][1] = true;
       }
     }
-    for (i = 0; i < jumpArrW.length; i++) {
-      if (jumpArrW[i] && lastJumpW) {
-        var jumpR = parseInt(jumpArrW[i][0]);
-        var jumpI = parseInt(jumpArrW[i][1]);
+    for (i = 0; i < jumpArr.length + 1; i++) {
+      if (jumpArr[index][i + 1] && lastJump[index][1]) {
+        var jumpR = parseInt(jumpArr[index][i + 1][0]);
+        var jumpI = parseInt(jumpArr[index][i + 1][1]);
 
         var posfrom = from.id.split(".");
         fromR = parseInt(posfrom[0]);
         fromI = parseInt(posfrom[1]);
 
-        console.log(i);
-        console.log(jumpArrW);
-        console.log(jumpR);
-        console.log(fromR);
-        console.log(jumpI);
-        console.log(fromI);
+        // console.log(i);
+        // console.log(jumpArr[index]);
+        // console.log(jumpR);
+        // console.log(fromR);
+        // console.log(jumpI);
+        // console.log(fromI);
         if (jumpR == fromR && jumpI == fromI) {
-          jumpPieceW(from, elem);
+          jumpPiece(from, elem, ally, enemy, index, dam, enemysrc, enemydamsrc);
         } else if (jumpR !== fromR && jumpI !== fromI) {
           alert("U moet slaan");
           from = false;
-          jumpArrW = [];
+          jumpArr = resetArray(jumpArr);
         }
       }
     }
-    lastPosJumpW = [];
+    lastPosJump = resetArray(lastPosJump);
   }
-  if (from.src == witsrc && isLegalMoveW(from, elem) && player == "W") {
-    if (jumpPieceW(from, elem) && lastPosJumpW[0] !== true) {
-      movePieceW(from, elem);
+  // console.log(elem);
+  // console.log(selfsrc);
+  // console.log(enemy);
+  // console.log(ally);
+  // console.log(index);
+  // console.log(dam);
+  // console.log(enemysrc);
+  // console.log(enemydamsrc);
+  if (from.src == selfsrc && isLegalMove(from, elem, enemysrc, enemydamsrc, dam, ally) && player == ally || isLegalMove(from, elem, enemysrc, enemydamsrc, dam, ally) && player == ally && selfsrc == "brown") {
+    if (jumpPiece(from, elem, ally, enemy, index, dam, enemysrc, enemydamsrc) && !lastPosJump[index] || jumpPiece(from, elem, ally, enemy, index, dam, enemysrc, enemydamsrc) && lastPosJump[index][1] !== true) {
+      movePiece(from, elem, ally, enemy, index, dam);
     } else {
       alert("u moet slaan");
     }
   }
 
-  if (elem.src == zwartsrc && player == "Z") {
-    console.log(player);
-    if (from) {
-      from.style.border = "none";
-    }
-    from = elem;
-    from.style.border = "1px solid red";
-  }
-  if (from.src == zwartsrc && player == "Z") {
-    checkJump();
-    // jumpOptZ();
-    console.log(lastPosZ);
-    if (lastPosZ) {
-      lastPosCheck();
-      console.log(lastPosJumpZ);
-      if (lastPosJumpZ[0]) {
-        for (i = 0; i < lastPosJumpZ.length; i++) {
-          if (lastPosJumpZ[i]) {
-            var jumpR = parseInt(lastPosJumpZ[i][0]);
-            var jumpI = parseInt(lastPosJumpZ[i][1]);
-            console.log(lastPosJumpZ);
+  function lastPosCheck(enemy, ally, index, dam) {
+    if (!dam) {
+      if (lastPos[index][1] && player == ally) {
+        var posfrom = lastPos[index][1].id.split(".");
 
-            var posfrom = from.id.split(".");
-            fromR = parseInt(posfrom[0]);
-            fromI = parseInt(posfrom[1]);
-            if (jumpR == fromR && jumpI == fromI) {
-              jumpPieceZ(from, elem);
-            } else if (jumpR !== fromR && jumpI !== fromI) {
-              alert("U moet slaan");
-              from = false;
-              jumpArrZ = [];
+        var fromR = parseInt(posfrom[0]);
+        var fromI = parseInt(posfrom[1]);
+        if (board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI - 1] == enemy && board[fromR - 2][fromI - 2] == "b" || board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI - 1] == enemy + "d" && board[fromR - 2][fromI - 2] == "b") {
+          var rsis = fromR + "." + fromI;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "--";
+          lastPosJump[index].push(rsisarr);
+          console.log(lastPosJump);
+
+        }
+        if (board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI + 1] == enemy && board[fromR - 2][fromI + 2] == "b" || board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI + 1] == enemy + "d" && board[fromR - 2][fromI + 2] == "b") {
+          var rsis = fromR + "." + fromI;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "-+";
+          lastPosJump[index].push(rsisarr);
+          console.log(lastPosJump);
+
+        }
+        if (board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI - 1] == enemy && board[fromR + 2][fromI - 2] == "b" || board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI - 1] == enemy + "d" && board[fromR + 2][fromI - 2] == "b") {
+          var rsis = fromR + "." + fromI;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "+-";
+          lastPosJump[index].push(rsisarr);
+          console.log(lastPosJump);
+
+        }
+        if (board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI + 1] == enemy && board[fromR + 2][fromI + 2] == "b" || board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI + 1] == enemy + "d" && board[fromR + 2][fromI + 2] == "b") {
+          var rsis = fromR + "." + fromI;
+          var rsisarr = rsis.split(".");
+          rsisarr[2] = "++";
+          lastPosJump[index].push(rsisarr);
+          console.log(lastPosJump);
+
+        }
+      }
+    } else if (dam) {
+
+    }
+  }
+
+  function jumpPiece(from, elem, ally, enemy, index, dam, enemysrc, enemydamsrc) {
+    var posfrom = from.id.split(".");
+    var posto = elem.id.split(".");
+
+    var fromR = parseInt(posfrom[0]);
+    var fromI = parseInt(posfrom[1]);
+
+    var toR = parseInt(posto[0]);
+    var toI = parseInt(posto[1]);
+    if (jumpArr[index]) {
+      for (i = 0; i < jumpArr[index].length + 1; i++) {
+        if (jumpArr[index][i + 1]) {
+          switch (jumpArr[index][i + 1][2]) {
+            case "--":
+              if (toR == fromR - 2 && toI == fromI - 2) {
+                board[fromR - 1].splice(fromI - 1, 1, "b");
+                jump[index][1] = true;
+
+                if (enemy == "W") {
+                  Wstones = Wstones - 1;
+                } else if (enemy == "Z") {
+                  Zstones = Zstones - 1;
+                }
+                movePiece(from, elem, ally, enemy, index, dam);
+              } else if (isLegalMove(from, elem, enemysrc, enemydamsrc, dam, ally)) {
+                from = false;
+                return false;
+              }
+              break;
+            case "-+":
+              if (toR == fromR - 2 && toI == fromI + 2) {
+                board[fromR - 1].splice(fromI + 1, 1, "b");
+                jump[index][1] = true;
+                if (enemy == "W") {
+                  Wstones = Wstones - 1;
+                } else if (enemy == "Z") {
+                  Zstones = Zstones - 1;
+                }
+                movePiece(from, elem, ally, enemy, index, dam);
+              } else if (isLegalMove(from, elem, enemysrc, enemydamsrc, dam, ally)) {
+                from = false;
+                return false;
+              }
+              break;
+            case "+-":
+              if (toR == fromR + 2 && toI == fromI - 2) {
+                board[fromR + 1].splice(fromI - 1, 1, "b");
+                jump[index][1] = true;
+                if (enemy == "W") {
+                  Wstones = Wstones - 1;
+                } else if (enemy == "Z") {
+                  Zstones = Zstones - 1;
+                }
+                movePiece(from, elem, ally, enemy, index, dam);
+              } else if (isLegalMove(from, elem, enemysrc, enemydamsrc, dam, ally)) {
+                from = false;
+                return false;
+              }
+              break;
+            case "++":
+              if (toR == fromR + 2 && toI == fromI + 2) {
+                board[fromR + 1].splice(fromI + 1, 1, "b");
+                jump[index][1] = true;
+                if (enemy == "W") {
+                  Wstones = Wstones - 1;
+                } else if (enemy == "Z") {
+                  Zstones = Zstones - 1;
+                }
+                movePiece(from, elem, ally, enemy, index, dam);
+              } else if (isLegalMove(from, elem, enemysrc, enemydamsrc, dam, ally)) {
+                from = false;
+                return false;
+              }
+              break;
+          }
+        }
+      }
+    }
+    jumpArr = resetArray(jumpArr);
+    return true;
+  }
+
+  function movePiece(from, elem, ally, enemy, index, dam) {
+    jumpArr = resetArray(jumpArr);
+    var container = document.getElementById("game-container");
+    var posfrom = from.id.split(".");
+    var posto = elem.id.split(".");
+
+    var fromR = parseInt(posfrom[0]);
+    var fromI = parseInt(posfrom[1]);
+
+    var toR = parseInt(posto[0]);
+    var toI = parseInt(posto[1]);
+
+    if (ally == "W" && toR == 0) {
+      board[toR].splice(toI, 1, ally + "d");
+      board[fromR].splice(fromI, 1, "b");
+    } else if (ally == "Z" && toR == 9) {
+      board[toR].splice(toI, 1, ally + "d");
+      board[fromR].splice(fromI, 1, "b");
+    } else {
+      board[toR].splice(toI, 1, ally);
+      board[fromR].splice(fromI, 1, "b");
+    }
+    checkJump(enemy, ally, index, dam);
+    console.log(lastPosJump[index]);
+    console.log(jumpArr[index]);
+    console.log(jump[index]);
+    if (jumpArr[index][1] && jump[index][1] == true) {
+      player = ally;
+      console.log(player);
+      jumpArr = resetArray(jumpArr);
+      lastPos[index][1] = elem;
+    }
+    lastPosJump = resetArray(lastPosJump);
+    lastPosCheck(enemy, ally, index, dam);
+    if (lastPosJump[index][1]) {
+      player = ally;
+      console.log(player);
+      jumpArr = resetArray(jumpArr);
+      lastPos[index][1] = elem;
+    } else {
+      lastPos = resetArray(lastPos);
+      jumpArr = resetArray(jumpArr);
+      lastPosJump = resetArray(lastPosJump);
+      player = enemy;
+      jump[index][1] = false;
+    }
+    console.log(player);
+    from = false;
+    clearChildren(container);
+    createBoard();
+  }
+
+  function isLegalMove(from, elem, enemysrc, enemydamsrc, dam, ally) {
+    var posfrom = from.id.split(".");
+    var posto = elem.id.split(".");
+
+    var fromR = parseInt(posfrom[0]);
+    var fromI = parseInt(posfrom[1]);
+
+    var toR = parseInt(posto[0]);
+    var toI = parseInt(posto[1]);
+
+    if (player == "W") {
+      if (toR == fromR - 1 && toI == fromI - 1 && elem.src !== enemysrc || toI == fromI + 1 && toR == fromR - 1 && elem.src !== enemysrc && toR == fromR - 1 && toI == fromI - 1 && elem.src !== enemydamsrc || toI == fromI + 1 && toR == fromR - 1 && elem.src !== enemydamsrc) {
+        return true;
+      } else {
+        return false;
+      }
+    } else if (player == "Z") {
+      if (toR == fromR + 1 && toI == fromI - 1 && elem.src !== enemysrc || toI == fromI + 1 && toR == fromR + 1 && elem.src !== enemysrc && toR == fromR + 1 && toI == fromI - 1 && elem.src !== enemydamsrc || toI == fromI + 1 && toR == fromR + 1 && elem.src !== enemydamsrc) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  function checkJump(enemy, ally, index, dam) {
+
+    for (r = 0; r < board.length; r++) {
+
+      for (i = 0; i < board[r].length; i++) {
+
+        if (!dam) {
+
+          if (board[r][i] == ally && player == ally) {
+
+            if (board[r - 1] && board[r - 2] && board[r - 1][i - 1] == enemy && board[r - 2][i - 2] == "b" || board[r - 1] && board[r - 2] && board[r - 1][i - 1] == enemy + "d" && board[r - 2][i - 2] == "b") {
+              var rs = r.toString();
+              var is = i.toString();
+
+              var rsis = rs + "." + is;
+              var rsisarr = rsis.split(".");
+              rsisarr[2] = "--";
+
+              jumpArr[index].push(rsisarr);
+              console.log(jumpArr[index]);
+            }
+            if (board[r - 1] && board[r - 2] && board[r - 1][i + 1] == enemy && board[r - 2][i + 2] == "b" || board[r - 1] && board[r - 2] && board[r - 1][i + 1] == enemy + "d" && board[r - 2][i + 2] == "b") {
+              var rs = r.toString();
+              var is = i.toString();
+
+              var rsis = rs + "." + is;
+              var rsisarr = rsis.split(".");
+              rsisarr[2] = "-+";
+
+              jumpArr[index].push(rsisarr);
+              console.log(jumpArr[index]);
+            }
+            if (board[r + 1] && board[r + 2] && board[r + 1][i - 1] == enemy && board[r + 2][i - 2] == "b" || board[r + 1] && board[r + 2] && board[r + 1][i - 1] == enemy + "d" && board[r + 2][i - 2] == "b") {
+              var rs = r.toString();
+              var is = i.toString();
+
+              var rsis = rs + "." + is;
+              var rsisarr = rsis.split(".");
+              rsisarr[2] = "+-";
+
+              jumpArr[index].push(rsisarr);
+              console.log(jumpArr[index]);
+            }
+            if (board[r + 1] && board[r + 2] && board[r + 1][i + 1] == enemy && board[r + 2][i + 2] == "b" || board[r + 1] && board[r + 2] && board[r + 1][i + 1] == enemy + "d" && board[r + 2][i + 2] == "b") {
+              var rs = r.toString();
+              var is = i.toString();
+
+              var rsis = rs + "." + is;
+              var rsisarr = rsis.split(".");
+              rsisarr[2] = "++";
+
+              jumpArr[index].push(rsisarr);
+              console.log(jumpArr[index]);
             }
           }
-        }
-      } else {
-        player = "W";
-      }
-      if (lastPosJumpZ[0]) {
-        lastJumpZ = false;
-      } else {
-        lastPosZ = false;
-        lastJumpZ = true;
-      }
-    }
-    for (i = 0; i < jumpArrZ.length; i++) {
-      if (jumpArrZ[i] && lastJumpZ) {
-        var jumpR = parseInt(jumpArrZ[i][0]);
-        var jumpI = parseInt(jumpArrZ[i][1]);
-
-        var posfrom = from.id.split(".");
-        fromR = parseInt(posfrom[0]);
-        fromI = parseInt(posfrom[1]);
-        console.log(jumpArrZ[i]);
-        console.log(jumpR);
-        console.log(fromR);
-        console.log(jumpI);
-        console.log(fromI);
-        if (jumpR == fromR && jumpI == fromI) {
-          jumpPieceZ(from, elem);
-        } else if (jumpR !== fromR && jumpI !== fromI) {
-          alert("U moet slaan");
-          from = false;
-          jumpArrZ = [];
-        }
-      }
-    }
-    lastPosJumpZ = [];
-  }
-  if (from.src == zwartsrc && isLegalMoveZ(from, elem) && player == "Z") {
-    if (jumpPieceZ(from, elem) && lastPosJumpZ[0] !== true) {
-      movePieceZ(from, elem);
-    } else {
-      alert("u moet slaan");
-    }
-  }
-}
-
-function isLegalMoveW(from, elem) {
-  var posfrom = from.id.split(".");
-  var posto = elem.id.split(".");
-
-  var fromR = parseInt(posfrom[0]);
-  var fromI = parseInt(posfrom[1]);
-
-  var toR = parseInt(posto[0]);
-  var toI = parseInt(posto[1]);
-
-  if (toR == fromR - 1 && toI == fromI - 1 && elem.src !== zwartsrc || toI == fromI + 1 && toR == fromR - 1 && elem.src !== zwartsrc) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function isLegalMoveZ(from, elem) {
-  var posfrom = from.id.split(".");
-  var posto = elem.id.split(".");
-
-  var fromR = parseInt(posfrom[0]);
-  var fromI = parseInt(posfrom[1]);
-
-  var toR = parseInt(posto[0]);
-  var toI = parseInt(posto[1]);
-
-  if (toR == fromR + 1 && toI == fromI - 1 && elem.src !== witsrc || toI == fromI + 1 && toR == fromR + 1 && elem.src !== witsrc) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function movePieceW(from, elem) {
-  jumpArrW = [];
-  var container = document.getElementById("game-container");
-  var posfrom = from.id.split(".");
-  var posto = elem.id.split(".");
-
-  var fromR = parseInt(posfrom[0]);
-  var fromI = parseInt(posfrom[1]);
-
-  var toR = parseInt(posto[0]);
-  var toI = parseInt(posto[1]);
-
-  if (toR == 0) {
-    board[toR].splice(toI, 1, "Wd");
-    board[fromR].splice(fromI, 1, "b");
-  } else {
-    board[toR].splice(toI, 1, "W");
-    board[fromR].splice(fromI, 1, "b");
-  }
-  checkJump();
-  // console.log(jumpW);
-  // console.log(jumpArrW[0])
-  console.log(lastPosJumpW);
-  if (jumpArrW[0] && jumpW == true) {
-    player = "W";
-    console.log(player);
-    jumpArrW = [];
-    lastPosW = elem;
-  }
-  lastPosJumpW = [];
-  lastPosCheck();
-  if (lastPosJumpW[0]) {
-    player = "W";
-    console.log(player);
-    jumpArrW = [];
-    lastPosW = elem;
-  } else {
-    lastPosW = false;
-    jumpArrW = [];
-    lastPosJumpW = [];
-    player = "Z";
-    jumpW = false;
-  }
-  from = false;
-  clearChildren(container);
-  createBoard();
-}
-
-function movePieceZ(from, elem) {
-  jumpArrZ = [];
-  var container = document.getElementById("game-container");
-  var posfrom = from.id.split(".");
-  var posto = elem.id.split(".");
-
-  var fromR = parseInt(posfrom[0]);
-  var fromI = parseInt(posfrom[1]);
-
-  var toR = parseInt(posto[0]);
-  var toI = parseInt(posto[1]);
-
-  if (toR == 9) {
-    board[toR].splice(toI, 1, "Zd");
-    board[fromR].splice(fromI, 1, "b");
-  } else {
-    board[toR].splice(toI, 1, "Z");
-    board[fromR].splice(fromI, 1, "b");
-  }
-  checkJump();
-  // console.log(jumpZ);
-  // console.log(jumpArrZ[0])
-  console.log(lastPosJumpZ);
-  if (jumpArrZ[0] && jumpZ == true) {
-    player = "Z";
-    console.log(player);
-    jumpArrZ = [];
-    lastPosZ = elem;
-  }
-  lastPosJumpZ = [];
-  lastPosCheck();
-  if (lastPosJumpZ[0]) {
-    player = "Z";
-    console.log(player);
-    jumpArrZ = [];
-    lastPosZ = elem;
-  } else {
-    lastPosZ = false;
-    jumpArrZ = [];
-    lastPosJumpZ = [];
-    player = "W";
-    jumpZ = false;
-  }
-  from = false;
-  clearChildren(container);
-  createBoard();
-}
-
-function checkJump() {
-
-  for (r = 0; r < board.length; r++) {
-
-    for (i = 0; i < board[r].length; i++) {
-
-      if (board[r][i] == "W" && player == "W") {
-
-        if (board[r - 1] && board[r - 2] && board[r - 1][i - 1] == "Z" && board[r - 2][i - 2] == "b") {
-          var rs = r.toString();
-          var is = i.toString();
-
-          var rsis = rs + "." + is;
-          var rsisarr = rsis.split(".");
-          rsisarr[2] = "--";
-          jumpArrW.push(rsisarr);
-          console.log(jumpArrW);
-
-        }
-        if (board[r - 1] && board[r - 2] && board[r - 1][i + 1] == "Z" && board[r - 2][i + 2] == "b") {
-          var rs = r.toString();
-          var is = i.toString();
-
-          var rsis = rs + "." + is;
-          var rsisarr = rsis.split(".");
-          rsisarr[2] = "-+";
-          jumpArrW.push(rsisarr);
-          console.log(jumpArrW);
-
-        }
-        if (board[r + 1] && board[r + 2] && board[r + 1][i - 1] == "Z" && board[r + 2][i - 2] == "b") {
-          var rs = r.toString();
-          var is = i.toString();
-
-          var rsis = rs + "." + is;
-          var rsisarr = rsis.split(".");
-          rsisarr[2] = "+-";
-          jumpArrW.push(rsisarr);
-          console.log(jumpArrW);
-
-        }
-        if (board[r + 1] && board[r + 2] && board[r + 1][i + 1] == "Z" && board[r + 2][i + 2] == "b") {
-          var rs = r.toString();
-          var is = i.toString();
-
-          var rsis = rs + "." + is;
-          var rsisarr = rsis.split(".");
-          rsisarr[2] = "++";
-          jumpArrW.push(rsisarr);
-          console.log(jumpArrW);
-
-        }
-      } else if (board[r][i] == "Z" && player == "Z") {
-
-        if (board[r - 1] && board[r - 2] && board[r - 1][i - 1] == "W" && board[r - 2][i - 2] == "b") {
-          var rs = r.toString();
-          var is = i.toString();
-
-          var rsis = rs + "." + is;
-          var rsisarr = rsis.split(".");
-          rsisarr[2] = "--";
-          jumpArrZ.push(rsisarr);
-          //console.log(jumpArrZ);
-
-        }
-        if (board[r - 1] && board[r - 2] && board[r - 1][i + 1] == "W" && board[r - 2][i + 2] == "b") {
-          var rs = r.toString();
-          var is = i.toString();
-
-          var rsis = rs + "." + is;
-          var rsisarr = rsis.split(".");
-          rsisarr[2] = "-+";
-          jumpArrZ.push(rsisarr);
-          //console.log(jumpArrZ);
-
-        }
-        if (board[r + 1] && board[r + 2] && board[r + 1][i - 1] == "W" && board[r + 2][i - 2] == "b") {
-          var rs = r.toString();
-          var is = i.toString();
-
-          var rsis = rs + "." + is;
-          var rsisarr = rsis.split(".");
-          rsisarr[2] = "+-";
-          jumpArrZ.push(rsisarr);
-          //console.log(jumpArrZ);
-
-        }
-        if (board[r + 1] && board[r + 2] && board[r + 1][i + 1] == "W" && board[r + 2][i + 2] == "b") {
-          var rs = r.toString();
-          var is = i.toString();
-
-          var rsis = rs + "." + is;
-          var rsisarr = rsis.split(".");
-          rsisarr[2] = "++";
-          jumpArrZ.push(rsisarr);
-          //console.log(jumpArrZ);
+          // } else if (dam) {
 
         }
       }
-    }
-  }
-}
-
-function jumpPieceW(from, elem) {
-  var posfrom = from.id.split(".");
-  var posto = elem.id.split(".");
-
-  var fromR = parseInt(posfrom[0]);
-  var fromI = parseInt(posfrom[1]);
-
-  var toR = parseInt(posto[0]);
-  var toI = parseInt(posto[1]);
-  for (i = 0; i < jumpArrW.length; i++) {
-    if (jumpArrW[i]) {
-      switch (jumpArrW[i][2]) {
-        case "--":
-          if (toR == fromR - 2 && toI == fromI - 2) {
-            board[fromR - 1].splice(fromI - 1, 1, "b");
-            jumpW = true;
-            Zstones = Zstones - 1;
-            movePieceW(from, elem);
-          } else if (isLegalMoveW(from, elem)) {
-            from = false;
-            return false;
-          }
-          break;
-        case "-+":
-          if (toR == fromR - 2 && toI == fromI + 2) {
-            board[fromR - 1].splice(fromI + 1, 1, "b");
-            jumpW = true;
-            Zstones = Zstones - 1;
-            movePieceW(from, elem);
-          } else if (isLegalMoveW(from, elem)) {
-            from = false;
-            return false;
-          }
-          break;
-        case "+-":
-          if (toR == fromR + 2 && toI == fromI - 2) {
-            board[fromR + 1].splice(fromI - 1, 1, "b");
-            jumpW = true;
-            Zstones = Zstones - 1;
-            movePieceW(from, elem);
-          } else if (isLegalMoveW(from, elem)) {
-            from = false;
-            return false;
-          }
-          break;
-        case "++":
-          if (toR == fromR + 2 && toI == fromI + 2) {
-            board[fromR + 1].splice(fromI + 1, 1, "b");
-            jumpW = true;
-            Zstones = Zstones - 1;
-            movePieceW(from, elem);
-          } else if (isLegalMoveW(from, elem)) {
-            from = false;
-            return false;
-          }
-          break;
-      }
-    }
-  }
-  jumpArrW = [];
-  return true;
-}
-
-function jumpPieceZ(from, elem) {
-  var posfrom = from.id.split(".");
-  var posto = elem.id.split(".");
-
-  var fromR = parseInt(posfrom[0]);
-  var fromI = parseInt(posfrom[1]);
-
-  var toR = parseInt(posto[0]);
-  var toI = parseInt(posto[1]);
-
-  for (i = 0; i < jumpArrZ.length; i++) {
-    if (jumpArrZ[i]) {
-      switch (jumpArrZ[i][2]) {
-        case "--":
-          if (toR == fromR - 2 && toI == fromI - 2) {
-            board[fromR - 1].splice(fromI - 1, 1, "b");
-            jumpZ = true;
-            Wstones = Wstones - 1;
-            movePieceZ(from, elem);
-          } else if (isLegalMoveZ(from, elem)) {
-            from = false;
-            return false;
-          }
-          break;
-        case "-+":
-          if (toR == fromR - 2 && toI == fromI + 2) {
-            board[fromR - 1].splice(fromI + 1, 1, "b");
-            jumpZ = true;
-            Wstones = Wstones - 1;
-            movePieceZ(from, elem);
-          } else if (isLegalMoveZ(from, elem)) {
-            from = false;
-            return false;
-          }
-          break;
-        case "+-":
-          if (toR == fromR + 2 && toI == fromI - 2) {
-            board[fromR + 1].splice(fromI - 1, 1, "b");
-            jumpZ = true;
-            Wstones = Wstones - 1;
-            movePieceZ(from, elem);
-          } else if (isLegalMoveZ(from, elem)) {
-            from = false;
-            return false;
-          }
-          break;
-        case "++":
-          if (toR == fromR + 2 && toI == fromI + 2) {
-            board[fromR + 1].splice(fromI + 1, 1, "b");
-            jumpZ = true;
-            Wstones = Wstones - 1;
-            movePieceZ(from, elem);
-          } else if (isLegalMoveZ(from, elem)) {
-            from = false;
-            return false;
-          }
-          break;
-      }
-    }
-  }
-  jumpArrZ = [];
-  return true;
-}
-
-function lastPosCheck() {
-  if (lastPosW && player == "W") {
-    var posfrom = lastPosW.id.split(".");
-
-    var fromR = parseInt(posfrom[0]);
-    var fromI = parseInt(posfrom[1]);
-    if (board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI - 1] == "Z" && board[fromR - 2][fromI - 2] == "b") {
-      var rsis = fromR + "." + fromI;
-      var rsisarr = rsis.split(".");
-      rsisarr[2] = "--";
-      lastPosJumpW.push(rsisarr);
-      console.log(lastPosJumpW);
-
-    }
-    if (board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI + 1] == "Z" && board[fromR - 2][fromI + 2] == "b") {
-      var rsis = fromR + "." + fromI;
-      var rsisarr = rsis.split(".");
-      rsisarr[2] = "-+";
-      lastPosJumpW.push(rsisarr);
-      console.log(lastPosJumpW);
-
-    }
-    if (board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI - 1] == "Z" && board[fromR + 2][fromI - 2] == "b") {
-      var rsis = fromR + "." + fromI;
-      var rsisarr = rsis.split(".");
-      rsisarr[2] = "+-";
-      lastPosJumpW.push(rsisarr);
-      console.log(lastPosJumpW);
-
-    }
-    if (board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI + 1] == "Z" && board[fromR + 2][fromI + 2] == "b") {
-      var rsis = fromR + "." + fromI;
-      var rsisarr = rsis.split(".");
-      rsisarr[2] = "++";
-      lastPosJumpW.push(rsisarr);
-      console.log(lastPosJumpW);
-
-    }
-  } else if (lastPosZ && player == "Z") {
-    var posfrom = lastPosZ.id.split(".");
-
-    var fromR = parseInt(posfrom[0]);
-    var fromI = parseInt(posfrom[1]);
-    if (board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI - 1] == "W" && board[fromR - 2][fromI - 2] == "b") {
-      var rsis = fromR + "." + fromI;
-      var rsisarr = rsis.split(".");
-      rsisarr[2] = "--";
-      lastPosJumpZ.push(rsisarr);
-      console.log(lastPosJumpZ);
-
-    }
-    if (board[fromR - 1] && board[fromR - 2] && board[fromR - 1][fromI + 1] == "W" && board[fromR - 2][fromI + 2] == "b") {
-      var rsis = fromR + "." + fromI;
-      var rsisarr = rsis.split(".");
-      rsisarr[2] = "-+";
-      lastPosJumpZ.push(rsisarr);
-      console.log(lastPosJumpZ);
-
-    }
-    if (board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI - 1] == "W" && board[fromR + 2][fromI - 2] == "b") {
-      var rsis = fromR + "." + fromI;
-      var rsisarr = rsis.split(".");
-      rsisarr[2] = "+-";
-      lastPosJumpZ.push(rsisarr);
-      console.log(lastPosJumpZ);
-
-    }
-    if (board[fromR + 1] && board[fromR + 2] && board[fromR + 1][fromI + 1] == "W" && board[fromR + 2][fromI + 2] == "b") {
-      var rsis = fromR + "." + fromI;
-      var rsisarr = rsis.split(".");
-      rsisarr[2] = "++";
-      lastPosJumpZ.push(rsisarr);
-      console.log(lastPosJumpZ);
-
     }
   }
 }
