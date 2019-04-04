@@ -1,148 +1,143 @@
 html {
-	background-color: #D2D2D2;
+  background-color: #D2D2D2;
 }
 
 body {
-	margin: 0;
+  margin: 0;
 }
 
 body header {
-	text-align: center;
-	background-color: #70AE9F;
-	color: black;
-	padding-bottom: 155px;
+  text-align: center;
+  background-color: #70AE9F;
+  color: black;
+  padding-bottom: 155px;
 }
 
 header h2 {
-	margin: 0;
-	padding-top: 25px;
-	padding-bottom: 50px;
-	padding-right: 12%;
-	width: 75%;
-	float: right;
-
+  margin: 0;
+  padding-top: 25px;
+  padding-bottom: 50px;
+  padding-right: 12%;
+  width: 75%;
+  float: right;
 }
 
 .games {
-	margin-bottom: 60px;
-	margin-top: 20px;
-	position: relative;
+  margin-bottom: 60px;
+  margin-top: 20px;
+  position: relative;
 }
 
 nav {
-	width: 85%;
-
+  width: 85%;
 }
 
 nav ul {
-	text-align: center;
-	margin: 0 0 0 0;
-	padding-left: 0;
+  text-align: center;
+  margin: 0 0 0 0;
+  padding-left: 0;
 }
 
 nav ul li {
-	list-style-type: none;
-	width:20%;
-	float: right;
-	background: #548377;
-	padding-top: 7px;
-	padding-bottom: 7px;
+  list-style-type: none;
+  width: 20%;
+  float: right;
+  background: #548377;
+  padding-top: 7px;
+  padding-bottom: 7px;
 }
 
 a {
-	color: white;
-	text-decoration: none;
+  color: white;
+  text-decoration: none;
 }
 
 .li {
-	padding-top: 5px;
-	padding-bottom: 5px;
-	padding-left: 15px;
-	padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
-.li:hover{
-	background: #72AF9E;
+.li:hover {
+  background: #72AF9E;
 }
 
 .enabled {
-	background: #72AF9E;
+  background: #72AF9E;
 }
 
 .logo {
-	padding-top: 3px;
-	height: 20%;
-	width: 10%;
-	float: left;
-	position: relative;
-	padding-left: 3%;
-
+  padding-top: 3px;
+  height: 20%;
+  width: 10%;
+  float: left;
+  position: relative;
+  padding-left: 3%;
 }
 
-.div-border{
-	height: 400px;
-	width: 350px;
-	background: #A8A8A8;
+.div-border {
+  height: 400px;
+  width: 350px;
+  background: #A8A8A8;
 }
 
-.flex-container{
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: space-around;
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
-.img{
-	height: 75%;
-	width: 90%;
-	position: relative;
-	top: 10px;
-	left: 15px;
+.img {
+  height: 75%;
+  width: 90%;
+  position: relative;
+  top: 10px;
+  left: 15px;
 }
 
 .gamename {
-	font-size: 20px;
+  font-size: 20px;
 }
 
 .p {
-	font-size: 20px;
-	margin: 0px;
+  font-size: 20px;
+  margin: 0px;
 }
 
 footer {
-	text-align: center;
-	width: 100%;
-	background: #71A396;
-	padding-bottom: 7px;
-	padding-top: 7px;
+  text-align: center;
+  width: 100%;
+  background: #71A396;
+  padding-bottom: 7px;
+  padding-top: 7px;
 }
 
 footer div p {
-	margin-bottom: 20px;
-	position: relative;
-	bottom: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  bottom: 20px;
 }
 
 footer div {
-	margin-top: 10px;
+  margin-top: 10px;
 }
 
 .block {
-	display: inline-block;
+  display: inline-block;
 }
 
 .TFlogo {
-	margin-top: 10px;
-	margin-right: 5px;
-	margin-bottom: 10px;
+  margin-top: 10px;
+  margin-right: 5px;
+  margin-bottom: 10px;
 }
 
 .teksten {
-	margin-left: 10%;
-	margin-right: 10%;
+  margin-left: 10%;
+  margin-right: 10%;
 }
-
-
 
 input[type=text], select, textarea {
   width: 100%;
@@ -171,15 +166,18 @@ input[type=submit]:hover {
   border-radius: 5px;
   padding: 20px;
 }
+
 .teksten {
-	font-size: 1.0em;
-	font-family: Arial Verdana;
+  font-size: 1.0em;
+  font-family: Arial Verdana;
 }
+
 .snake-img {
-	position: absolute;
-	left: 80%;
+  position: absolute;
+  left: 80%;
 }
+
 .dam-img {
-	position: absolute;
-	left: 80%;
+  position: absolute;
+  left: 80%;
 }
