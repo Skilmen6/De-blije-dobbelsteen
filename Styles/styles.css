@@ -181,3 +181,8 @@ input[type=submit]:hover {
   position: absolute;
   left: 80%;
 }
+
+#aboutfooter{
+  position: relative;
+    top: 410px;
+}
